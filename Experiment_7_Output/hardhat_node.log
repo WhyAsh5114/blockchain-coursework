@@ -1,0 +1,390 @@
+Started HTTP and WebSocket JSON-RPC server at http://127.0.0.1:8545/
+
+Accounts
+========
+
+WARNING: These accounts, and their private keys, are publicly known.
+Any funds sent to them on Mainnet or any other live network WILL BE LOST.
+
+Account #0: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 (10000 ETH)
+Private Key: 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+
+Account #1: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8 (10000 ETH)
+Private Key: 0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d
+
+Account #2: 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC (10000 ETH)
+Private Key: 0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a
+
+Account #3: 0x90F79bf6EB2c4f870365E785982E1f101E93b906 (10000 ETH)
+Private Key: 0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6
+
+Account #4: 0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65 (10000 ETH)
+Private Key: 0x47e179ec197488593b187f80a00eb0da91f1b9d0b13f8733639f19c30a34926a
+
+Account #5: 0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc (10000 ETH)
+Private Key: 0x8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba
+
+Account #6: 0x976EA74026E726554dB657fA54763abd0C3a0aa9 (10000 ETH)
+Private Key: 0x92db14e403b83dfe3df233f83dfa3a0d7096f21ca9b0d6d6b8d88b2b4ec1564e
+
+Account #7: 0x14dC79964da2C08b23698B3D3cc7Ca32193d9955 (10000 ETH)
+Private Key: 0x4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356
+
+Account #8: 0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f (10000 ETH)
+Private Key: 0xdbda1821b80551c9d65939329250298aa3472ba22feea921c0cf5d620ea67b97
+
+Account #9: 0xa0Ee7A142d267C1f36714E4a8F75612F20a79720 (10000 ETH)
+Private Key: 0x2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6
+
+Account #10: 0xBcd4042DE499D14e55001CcbB24a551F3b954096 (10000 ETH)
+Private Key: 0xf214f2b2cd398c806f84e317254e0f0b801d0643303237d97a22a48e01628897
+
+Account #11: 0x71bE63f3384f5fb98995898A86B02Fb2426c5788 (10000 ETH)
+Private Key: 0x701b615bbdfb9de65240bc28bd21bbc0d996645a3dd57e7b12bc2bdf6f192c82
+
+Account #12: 0xFABB0ac9d68B0B445fB7357272Ff202C5651694a (10000 ETH)
+Private Key: 0xa267530f49f8280200edf313ee7af6b827f2a8bce2897751d06a843f644967b1
+
+Account #13: 0x1CBd3b2770909D4e10f157cABC84C7264073C9Ec (10000 ETH)
+Private Key: 0x47c99abed3324a2707c28affff1267e45918ec8c3f20b8aa892e8b065d2942dd
+
+Account #14: 0xdF3e18d64BC6A983f673Ab319CCaE4f1a57C7097 (10000 ETH)
+Private Key: 0xc526ee95bf44d8fc405a158bb884d9d1238d99f0612e9f33d006bb0789009aaa
+
+Account #15: 0xcd3B766CCDd6AE721141F452C550Ca635964ce71 (10000 ETH)
+Private Key: 0x8166f546bab6da521a8369cab06c5d2b9e46670292d85c875ee9ec20e84ffb61
+
+Account #16: 0x2546BcD3c84621e976D8185a91A922aE77ECEc30 (10000 ETH)
+Private Key: 0xea6c44ac03bff858b476bba40716402b03e41b8e97e276d1baec7c37d42484a0
+
+Account #17: 0xbDA5747bFD65F08deb54cb465eB87D40e51B197E (10000 ETH)
+Private Key: 0x689af8efa8c651a91ad287602527f3af2fe9f6501a7ac4b061667b5a93e037fd
+
+Account #18: 0xdD2FD4581271e230360230F9337D5c0430Bf44C0 (10000 ETH)
+Private Key: 0xde9be858da4a475276426320d5e9262ecfc3ba460bfac56360bfa6c4c28b4ee0
+
+Account #19: 0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199 (10000 ETH)
+Private Key: 0xdf57089febbacf7ba0bc227dafbffa9fc08a93fdc68e1e42411a14efcf23656e
+
+WARNING: These accounts, and their private keys, are publicly known.
+Any funds sent to them on Mainnet or any other live network WILL BE LOST.
+
+[32meth_accounts[0m
+[32mhardhat_metadata[0m
+[32mhardhat_metadata (2)[0m
+[32mhardhat_metadata (3)[0m
+[32mhardhat_metadata (4)[0m
+[32mhardhat_metadata (5)[0m
+[32mhardhat_metadata (6)[0m
+[32mhardhat_metadata (7)[0m
+[32mhardhat_metadata (8)[0m
+[32mhardhat_metadata (9)[0m
+[32mhardhat_metadata (10)[0m
+[32mhardhat_metadata (11)[0m
+[32mhardhat_metadata (12)[0m
+[32mhardhat_metadata (13)[0m
+[32mhardhat_metadata (14)[0m
+[32mhardhat_metadata (15)[0m
+[32mhardhat_metadata (16)[0m
+[32mhardhat_metadata (17)[0m
+[32mhardhat_metadata (18)[0m
+[32mhardhat_metadata (19)[0m
+[32mhardhat_metadata (20)[0m
+[32meth_blockNumber[0m
+[32meth_getBlockByNumber[0m
+[32meth_feeHistory[0m
+[32meth_maxPriorityFeePerGas[0m
+[32meth_sendTransaction[0m
+  Contract deployment: FarmerContract
+  Contract address:    0x5fbdb2315678afecb367f032d93f642f64180aa3
+  Transaction:         0xa7a83e2a30fb1a4c9d656510dcb6ffbd736c5c17adc73f8de888c4822153812c
+  From:                0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266
+  Value:               0 ETH
+  Gas used:            749765 of 16777216
+  Block #1:            0x29b2ac0433fe5fc1339c539f5b46c5b6d4d4436c191caf8b38f1e9810bfd3443
+
+[32meth_getTransactionByHash[0m
+[32meth_getTransactionReceipt[0m
+[32meth_blockNumber[0m
+[32meth_feeHistory[0m
+[32meth_sendTransaction[0m
+  Contract deployment: DistributorContract
+  Contract address:    0x8464135c8f25da09e49bc8782676a84730c318bc
+  Transaction:         0xfd153eadf78954e20868906e9fed9663207f2afa35f6024e4141765c357df256
+  From:                0x70997970c51812dc3a010c7d01b50e0d17dc79c8
+  Value:               0 ETH
+  Gas used:            965838 of 16777216
+  Block #2:            0x7ab6be915dd7708ef73922ee9e60098787dc8149f86b1884f456461802148dbf
+
+[32meth_getTransactionByHash[0m
+[32meth_getTransactionReceipt[0m
+[32meth_blockNumber[0m
+[32meth_feeHistory[0m
+[32meth_sendTransaction[0m
+  Contract deployment: RetailerContract
+  Contract address:    0x663f3ad617193148711d28f5334ee4ed07016602
+  Transaction:         0x16b956bc00ddb438447280e801935a300f6b7e4ffeaa8fdeee1dcb7a0dcebfc1
+  From:                0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc
+  Value:               0 ETH
+  Gas used:            1036245 of 16777216
+  Block #3:            0xe6431aec0075d8e10f247d7e849d3c7ef46540094b829aa2ec9da57154e2681a
+
+[32meth_getTransactionByHash[0m
+[32meth_getTransactionReceipt[0m
+[32meth_blockNumber[0m
+[32meth_feeHistory[0m
+[32meth_sendTransaction[0m
+  Contract deployment: CustomerContract
+  Contract address:    0x057ef64e23666f000b34ae31332854acbd1c8544
+  Transaction:         0x4fd12f398cba94da83b8bd6c2e8040522540fb967b37035817f314cc5a9f5689
+  From:                0x90f79bf6eb2c4f870365e785982e1f101e93b906
+  Value:               0 ETH
+  Gas used:            1091322 of 16777216
+  Block #4:            0xce66397e4964337913cd46424c0c095938a739ce6dd0b0d7b1a58e6f3f0a019a
+
+[32meth_getTransactionByHash[0m
+[32meth_getTransactionReceipt[0m
+[32meth_blockNumber[0m
+[32meth_feeHistory[0m
+[32meth_sendTransaction[0m
+  Contract call:       FarmerContract#addBatch
+  Transaction:         0xdbe224cbc0b218d01793bd6cb76d069b28f315336293447643888c0626326ce3
+  From:                0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266
+  To:                  0x5fbdb2315678afecb367f032d93f642f64180aa3
+  Value:               0 ETH
+  Gas used:            138336 of 16777216
+  Block #5:            0xe589e76fb21eae2678f7ff75f8b974ddcf13beda0e133aba9a7cf5711e1f8b3f
+
+[32meth_getTransactionByHash[0m
+[32meth_getTransactionReceipt[0m
+[32meth_call[0m
+  Contract call:       FarmerContract#getBatch
+  From:                0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266
+  To:                  0x5fbdb2315678afecb367f032d93f642f64180aa3
+
+[32meth_blockNumber[0m
+[32meth_feeHistory[0m
+[32meth_sendTransaction[0m
+  Contract call:       DistributorContract#receiveBatch
+  Transaction:         0x170b61c54efc59f2e0dc041c45c10257fd540e9e3429ad80bc4aca681973366b
+  From:                0x70997970c51812dc3a010c7d01b50e0d17dc79c8
+  To:                  0x8464135c8f25da09e49bc8782676a84730c318bc
+  Value:               0 ETH
+  Gas used:            179110 of 16777216
+  Block #6:            0xe441fba263171e02b3caa0694a433f353f9fe3a9874ea6f27cdbf381fcff650d
+
+[32meth_getTransactionByHash[0m
+[32meth_getTransactionReceipt[0m
+[32meth_call[0m
+  Contract call:       DistributorContract#getReceivedBatch
+  From:                0x70997970c51812dc3a010c7d01b50e0d17dc79c8
+  To:                  0x8464135c8f25da09e49bc8782676a84730c318bc
+
+[32meth_blockNumber[0m
+[32meth_feeHistory[0m
+[32meth_sendTransaction[0m
+  Contract call:       RetailerContract#receiveFromDistributor
+  Transaction:         0xf7749531e7c0e0f69f0593f6f40d0e0dafc27a33174727b177c47f2f3c93a751
+  From:                0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc
+  To:                  0x663f3ad617193148711d28f5334ee4ed07016602
+  Value:               0 ETH
+  Gas used:            204276 of 16777216
+  Block #7:            0xb7268b9892938d77ce477da432194f5bdc7898ece88f10d7ff878fd9e1ef1ed9
+
+[32meth_getTransactionByHash[0m
+[32meth_getTransactionReceipt[0m
+[32meth_call[0m
+  Contract call:       RetailerContract#getRetailBatch
+  From:                0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc
+  To:                  0x663f3ad617193148711d28f5334ee4ed07016602
+
+[32meth_blockNumber[0m
+[32meth_feeHistory[0m
+[32meth_sendTransaction[0m
+  Contract call:       CustomerContract#purchaseFromRetailer
+  Transaction:         0xfcdbe18999b3bb4fa74f0bc0346d1e00de7b0d69178e3ee35e77609abdb5030c
+  From:                0x90f79bf6eb2c4f870365e785982e1f101e93b906
+  To:                  0x057ef64e23666f000b34ae31332854acbd1c8544
+  Value:               0 ETH
+  Gas used:            229478 of 16777216
+  Block #8:            0xa7fc2dd17f505701c81d9bc23d0d2e48ce10e9479823640c9d46e1fe2ee1253f
+
+[32meth_getTransactionByHash[0m
+[32meth_getTransactionReceipt[0m
+[32meth_call[0m
+  Contract call:       CustomerContract#getPurchasedBatch
+  From:                0x90f79bf6eb2c4f870365e785982e1f101e93b906
+  To:                  0x057ef64e23666f000b34ae31332854acbd1c8544
+
+[32meth_blockNumber[0m
+[32meth_feeHistory[0m
+[31meth_sendTransaction[0m
+  Contract call:       CustomerContract#purchaseFromRetailer
+  Transaction:         0xca1aa2454696e06bec3de3a3f547908da9c70e1cd51950f1a4f665faa4d343b0
+  From:                0x90f79bf6eb2c4f870365e785982e1f101e93b906
+  To:                  0x057ef64e23666f000b34ae31332854acbd1c8544
+  Value:               0 ETH
+  Gas used:            48994 of 16777216
+  Block #9:            0xe4c6095f4d31335e3868735304a4cd176ac73cdfd55e64289f2e8841f2e46eaa
+
+  Error: reverted with reason string 'Batch already purchased!'
+
+[32meth_accounts[0m
+[32mhardhat_metadata[0m
+[32mhardhat_metadata (2)[0m
+[32mhardhat_metadata (3)[0m
+[32mhardhat_metadata (4)[0m
+[32mhardhat_metadata (5)[0m
+[32mhardhat_metadata (6)[0m
+[32mhardhat_metadata (7)[0m
+[32mhardhat_metadata (8)[0m
+[32mhardhat_metadata (9)[0m
+[32mhardhat_metadata (10)[0m
+[32mhardhat_metadata (11)[0m
+[32mhardhat_metadata (12)[0m
+[32mhardhat_metadata (13)[0m
+[32mhardhat_metadata (14)[0m
+[32mhardhat_metadata (15)[0m
+[32mhardhat_metadata (16)[0m
+[32mhardhat_metadata (17)[0m
+[32mhardhat_metadata (18)[0m
+[32mhardhat_metadata (19)[0m
+[32mhardhat_metadata (20)[0m
+[32meth_blockNumber[0m
+[32meth_getBlockByNumber[0m
+[32meth_feeHistory[0m
+[32meth_sendTransaction[0m
+  Contract deployment: FarmerContract
+  Contract address:    0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0
+  Transaction:         0x71f5649b1273fe3d07b308ac0def8c241777def76ffa96452b7dc114c118f931
+  From:                0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266
+  Value:               0 ETH
+  Gas used:            749765 of 16777216
+  Block #10:           0x818c6d0fb2c0b70119afcca3475ce480f5d38c308940d3241dfe6f220e41d988
+
+[32meth_getTransactionByHash[0m
+[32meth_getTransactionReceipt[0m
+[32meth_blockNumber[0m
+[32meth_feeHistory[0m
+[32meth_sendTransaction[0m
+  Contract deployment: DistributorContract
+  Contract address:    0x948b3c65b89df0b4894abe91e6d02fe579834f8f
+  Transaction:         0x14d606a7cf50d51ac7efd233e113420d68567d8b89bbcb46ec98b59ca6d0e93e
+  From:                0x70997970c51812dc3a010c7d01b50e0d17dc79c8
+  Value:               0 ETH
+  Gas used:            965838 of 16777216
+  Block #11:           0x737a7f1db6f125eb47eb6cd11a5f1de7b23e03200d271b774e6f53e1758b1a90
+
+[32meth_getTransactionByHash[0m
+[32meth_getTransactionReceipt[0m
+[32meth_blockNumber[0m
+[32meth_feeHistory[0m
+[32meth_sendTransaction[0m
+  Contract deployment: RetailerContract
+  Contract address:    0x8438ad1c834623cff278ab6829a248e37c2d7e3f
+  Transaction:         0xee0d60d74f900a412a8003433690bae59e6e63ee21694d14e4424396d68ff2ba
+  From:                0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc
+  Value:               0 ETH
+  Gas used:            1036245 of 16777216
+  Block #12:           0x968d04cbb5841a75ce3e979f26d53bfd7a509f3b546d9977740eeac773393fa6
+
+[32meth_getTransactionByHash[0m
+[32meth_getTransactionReceipt[0m
+[32meth_blockNumber[0m
+[32meth_feeHistory[0m
+[32meth_sendTransaction[0m
+  Contract deployment: CustomerContract
+  Contract address:    0xcba6b9a951749b8735c603e7ffc5151849248772
+  Transaction:         0x841d72df6c43d307d8a4650ab07690c7adc7b9d4a7897e0507b9d81ce324ad8c
+  From:                0x90f79bf6eb2c4f870365e785982e1f101e93b906
+  Value:               0 ETH
+  Gas used:            1091322 of 16777216
+  Block #13:           0xa3ec750b33fe8fc9d061a979f8b20acb64aacd52f3f99ac764f73dde32666b8c
+
+[32meth_getTransactionByHash[0m
+[32meth_getTransactionReceipt[0m
+[32meth_blockNumber[0m
+[32meth_feeHistory[0m
+[32meth_sendTransaction[0m
+  Contract call:       FarmerContract#addBatch
+  Transaction:         0x8f729e213957ba12bfbab88849e8976173dc22d8d96d56c0f4d8d1445be904aa
+  From:                0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266
+  To:                  0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0
+  Value:               0 ETH
+  Gas used:            138336 of 16777216
+  Block #14:           0x35b7a1615ae4f99c7dcc9caf2ca3e78f3be4da9fc8cb5c65b8d59081c6989c40
+
+[32meth_getTransactionByHash[0m
+[32meth_getTransactionReceipt[0m
+[32meth_call[0m
+  Contract call:       FarmerContract#getBatch
+  From:                0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266
+  To:                  0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0
+
+[32meth_blockNumber[0m
+[32meth_feeHistory[0m
+[32meth_sendTransaction[0m
+  Contract call:       DistributorContract#receiveBatch
+  Transaction:         0x60478bad6d49c85e2a1e47fb0e24b1e7851e3f17069c914815e7ab48e3dbea2e
+  From:                0x70997970c51812dc3a010c7d01b50e0d17dc79c8
+  To:                  0x948b3c65b89df0b4894abe91e6d02fe579834f8f
+  Value:               0 ETH
+  Gas used:            179110 of 16777216
+  Block #15:           0xc675993344f207a992f05f2a8529f3e7b6a32c49bc9fccfc0f55070a003d47db
+
+[32meth_getTransactionByHash[0m
+[32meth_getTransactionReceipt[0m
+[32meth_call[0m
+  Contract call:       DistributorContract#getReceivedBatch
+  From:                0x70997970c51812dc3a010c7d01b50e0d17dc79c8
+  To:                  0x948b3c65b89df0b4894abe91e6d02fe579834f8f
+
+[32meth_blockNumber[0m
+[32meth_feeHistory[0m
+[32meth_sendTransaction[0m
+  Contract call:       RetailerContract#receiveFromDistributor
+  Transaction:         0x517ff8c1070bc94ba790b9577dc7ba4082c0f7cd96712aa429da10f00441153c
+  From:                0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc
+  To:                  0x8438ad1c834623cff278ab6829a248e37c2d7e3f
+  Value:               0 ETH
+  Gas used:            204276 of 16777216
+  Block #16:           0xc9971d157d5d1fe4e1dbdc0941eef40e452fe8b789da3999e7082253ab263f0a
+
+[32meth_getTransactionByHash[0m
+[32meth_getTransactionReceipt[0m
+[32meth_call[0m
+  Contract call:       RetailerContract#getRetailBatch
+  From:                0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc
+  To:                  0x8438ad1c834623cff278ab6829a248e37c2d7e3f
+
+[32meth_blockNumber[0m
+[32meth_feeHistory[0m
+[32meth_sendTransaction[0m
+  Contract call:       CustomerContract#purchaseFromRetailer
+  Transaction:         0xb17383ad642690de2091f34182b6d9455fb34aea4582a6506727eb6b88886221
+  From:                0x90f79bf6eb2c4f870365e785982e1f101e93b906
+  To:                  0xcba6b9a951749b8735c603e7ffc5151849248772
+  Value:               0 ETH
+  Gas used:            229478 of 16777216
+  Block #17:           0x40cff37b69661bc8508d94be58e291cc7922929421c2567ce7888cfc94b77981
+
+[32meth_getTransactionByHash[0m
+[32meth_getTransactionReceipt[0m
+[32meth_call[0m
+  Contract call:       CustomerContract#getPurchasedBatch
+  From:                0x90f79bf6eb2c4f870365e785982e1f101e93b906
+  To:                  0xcba6b9a951749b8735c603e7ffc5151849248772
+
+[32meth_blockNumber[0m
+[32meth_feeHistory[0m
+[31meth_sendTransaction[0m
+  Contract call:       CustomerContract#purchaseFromRetailer
+  Transaction:         0xe5e722c54f6f9fa2dbdc5d3d02f3dac2924c5aca54dbf4d8205f5181601e1fb4
+  From:                0x90f79bf6eb2c4f870365e785982e1f101e93b906
+  To:                  0xcba6b9a951749b8735c603e7ffc5151849248772
+  Value:               0 ETH
+  Gas used:            48994 of 16777216
+  Block #18:           0x6cd030bb2267b9a4d640905c20e318370e00fb251901faaff1603ad683c845ea
+
+  Error: reverted with reason string 'Batch already purchased!'
+

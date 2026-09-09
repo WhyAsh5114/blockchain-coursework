@@ -1,0 +1,11 @@
+sources/
+
+# Python
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+
+# Node / Hardhat (Experiment_7_Output)
+node_modules/
+artifacts/
+cache/

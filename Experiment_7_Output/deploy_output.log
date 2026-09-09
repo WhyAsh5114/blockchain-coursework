@@ -1,0 +1,62 @@
+=== Accounts (Hardhat local network) ===
+Farmer     : 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+Distributor: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+Retailer   : 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC
+Customer   : 0x90F79bf6EB2c4f870365E785982E1f101E93b906
+
+=== Deploying contracts ===
+FarmerContract deployed at     : 0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
+DistributorContract deployed at: 0x948B3c65b89DF0B4894ABE91E6D02FE579834F8F
+RetailerContract deployed at   : 0x8438Ad1C834623CfF278AB6829a248E37C2D7E3f
+CustomerContract deployed at   : 0xCba6b9A951749B8735C603e7fFC5151849248772
+
+=== Stage 1: Farmer creates batch #1 (Alphonso Mango, 500kg) ===
+addBatch tx hash: 0x8f729e213957ba12bfbab88849e8976173dc22d8d96d56c0f4d8d1445be904aa
+FarmerContract.getBatch -> {
+  batchID: '1',
+  cropName: 'Alphonso Mango',
+  quantity: '500',
+  timestamp: '1788935030',
+  farmer: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
+}
+
+=== Stage 2: Distributor receives the batch ===
+receiveBatch tx hash: 0x60478bad6d49c85e2a1e47fb0e24b1e7851e3f17069c914815e7ab48e3dbea2e
+DistributorContract.getReceivedBatch -> {
+  batchID: '1',
+  cropName: 'Alphonso Mango',
+  quantity: '500',
+  timestamp: '1788935031',
+  farmer: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+  distributor: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8'
+}
+
+=== Stage 3: Retailer receives the batch from the distributor ===
+receiveFromDistributor tx hash: 0x517ff8c1070bc94ba790b9577dc7ba4082c0f7cd96712aa429da10f00441153c
+RetailerContract.getRetailBatch -> {
+  batchID: '1',
+  cropName: 'Alphonso Mango',
+  quantity: '500',
+  timestamp: '1788935032',
+  farmer: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+  distributor: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
+  retailer: '0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC'
+}
+
+=== Stage 4: Customer purchases the batch from the retailer ===
+purchaseFromRetailer tx hash: 0xb17383ad642690de2091f34182b6d9455fb34aea4582a6506727eb6b88886221
+CustomerContract.getPurchasedBatch -> {
+  batchID: '1',
+  cropName: 'Alphonso Mango',
+  quantity: '500',
+  timestamp: '1788935033',
+  farmer: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+  distributor: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
+  retailer: '0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC',
+  customer: '0x90F79bf6EB2c4f870365E785982E1f101E93b906'
+}
+
+=== Negative test: re-purchasing the same batch must revert ===
+Reverted as expected: Error: VM Exception while processing transaction: reverted with reason string 'Batch already purchased!'
+
+=== Full supply chain trace for batch 1 complete ===
