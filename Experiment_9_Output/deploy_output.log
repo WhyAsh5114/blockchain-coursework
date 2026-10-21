@@ -1,0 +1,47 @@
+=== Accounts (Hardhat local network) ===
+Owner : 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+Alice : 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+Bob   : 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC
+
+=== 1. Deploy the ERC-20 token ===
+VESToken deployed at: 0x5FbDB2315678afecb367f032d93F642f64180aa3
+name()        : VES Token
+symbol()      : VEST
+decimals()    : 18
+totalSupply() : 1000.0 VEST
+balanceOf(Owner): 1000.0 VEST
+
+=== 2. transfer(): Owner -> Alice 100 VEST ===
+Transfer event: from Owner to Alice value 100.0 VEST
+balanceOf(Owner): 900.0
+balanceOf(Alice): 100.0
+
+=== 3. approve() + transferFrom(): Alice lets Bob spend 40 VEST ===
+Approval event: owner Alice spender Bob value 40.0 VEST
+allowance(Alice, Bob): 40.0
+Bob calls transferFrom(Alice, Bob, 25)
+balanceOf(Alice): 75.0
+balanceOf(Bob)  : 25.0
+allowance(Alice, Bob) now: 15.0
+Bob tries to spend 20 more than the remaining 15 allowance: reverted as expected -> ERC20InsufficientAllowance("0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC", 15000000000000000000, 20000000000000000000)
+
+=== 4. Mintable: owner mints 500 VEST to Bob ===
+totalSupply(): 1500.0
+balanceOf(Bob): 525.0
+Alice (non-owner) tries to mint: reverted as expected -> OwnableUnauthorizedAccount("0x70997970C51812dc3A010C7d01b50e0d17dc79C8")
+
+=== 5. Burnable: Bob burns 100 VEST ===
+totalSupply(): 1400.0
+balanceOf(Bob): 425.0
+
+=== 6. Pausable: owner pauses all transfers ===
+paused(): true
+Alice tries to transfer while paused: reverted as expected -> EnforcedPause()
+paused() after unpause(): false
+Alice -> Bob 5 VEST succeeds after unpause; balanceOf(Alice): 70.0
+
+=== 7. Final balances ===
+Owner : 900.0 VEST
+Alice : 70.0 VEST
+Bob   : 430.0 VEST
+totalSupply(): 1400.0 VEST

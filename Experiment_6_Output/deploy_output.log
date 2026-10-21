@@ -1,0 +1,43 @@
+=== Accounts (Hardhat local network) ===
+Chairperson : 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+Alice       : 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+Bob         : 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC
+Carol       : 0x90F79bf6EB2c4f870365E785982E1f101E93b906
+Dave        : 0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65
+
+=== 1. Deploy Ballot with STRING proposal names (no bytes32 conversion needed) ===
+Ballot deployed at: 0x5FbDB2315678afecb367f032d93F642f64180aa3
+chairperson(): 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+proposals(0) -> name: "Proposal A: Library Upgrade", voteCount: 0
+proposals(1) -> name: "Proposal B: Sports Complex", voteCount: 0
+proposals(2) -> name: "Proposal C: Cafeteria Renovation", voteCount: 0
+
+=== 2. Chairperson gives right to vote ===
+giveRightToVote(Alice) tx 0x2ca7f5dbeb14adef9b140516b6fecb7309c4b6fdff48cbfddf048ad2ab8b447e
+giveRightToVote(Bob) tx 0xfde02287a46bfecf930f7b452e071f12295220c2c48158853143bdc7380f9802
+giveRightToVote(Carol) tx 0x3896ae567a0e1d2459654b2f0655368c1233334cc2b75b8e58ab218480519102
+voters(Alice).weight = 1
+voters(Dave).weight  = 0 (never given the right)
+
+=== 3. Delegation: Carol delegates her vote to Bob (Bob's weight becomes 2) ===
+voters(Bob).weight = 2
+voters(Carol).voted = true
+
+=== 4. Voting ===
+Alice voted for proposal 0
+Bob voted for proposal 1 (carrying Carol's delegated vote, weight 2)
+Chairperson voted for proposal 1
+proposals(0) "Proposal A: Library Upgrade" -> voteCount 1
+proposals(1) "Proposal B: Sports Complex" -> voteCount 3
+proposals(2) "Proposal C: Cafeteria Renovation" -> voteCount 0
+
+=== 5. Winner ===
+winningProposal() = 1
+winnerName()      = "Proposal B: Sports Complex"
+
+=== 6. Negative tests: require() statements revert and roll back state ===
+Alice votes a second time: reverted as expected -> 'Already voted.'
+Dave (no right) votes: reverted as expected -> 'Has no right to vote'
+Non-chairperson (Alice) gives right to vote: reverted as expected -> 'Only chairperson can give right to vote.'
+Carol delegates again after delegating: reverted as expected -> 'You already voted.'
+proposal 2 voteCount still: 0 (failed txs changed nothing)

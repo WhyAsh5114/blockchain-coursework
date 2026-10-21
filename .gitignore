@@ -9,3 +9,6 @@ __pycache__/
 node_modules/
 artifacts/
 cache/
+
+# Experiment 10 (Fabric samples clone + install log)
+Experiment_10_Output/fabric-samples/

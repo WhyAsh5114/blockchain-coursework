@@ -1,0 +1,37 @@
+=== Accounts (Hardhat local network) ===
+Owner: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+Alice: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+Bob  : 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC
+Carol: 0x90F79bf6EB2c4f870365E785982E1f101E93b906
+Dave : 0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65
+
+=== Scenario A: Campaign that reaches its goal ===
+Campaign A deployed at: 0x5FbDB2315678afecb367f032d93F642f64180aa3
+Goal: 3.0 ETH, duration: 60s
+0x70997970C51812dc3A010C7d01b50e0d17dc79C8 contributed 1.0 ETH (tx 0x16c9ced90ac62c3655626e8f7cbb521cc3a6f84640ce693109109fbeab984be7)
+0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC contributed 1.0 ETH (tx 0xda97633a71a95a68cdeb973039e139522db405a1bb25fb4ec353a0886b5d1ffd)
+0x90F79bf6EB2c4f870365E785982E1f101E93b906 contributed 1.5 ETH (tx 0x1f0eae3afdfd5ff6c478fbe7f8ddb6c2e365c3c3443c21d4a4daf530f4591838)
+Total raised: 3.5 ETH
+Goal reached before deadline? true
+Fast-forwarding chain past the deadline (+65s)...
+Owner withdraw tx hash: 0x1601cc01c03a68a95b6657440415787ab4c2f6187581cb23c66ec5bb774aa3b5
+Owner balance change: +3.5 ETH (gross, before gas)
+Contract balance after withdraw: 0.0 ETH
+Negative test: owner tries to withdraw a second time...
+Reverted as expected: Error: VM Exception while processing transaction: reverted with reason string 'Already withdrawn'
+
+=== Scenario B: Campaign that misses its goal ===
+Campaign B deployed at: 0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9
+Goal: 10.0 ETH, duration: 60s
+0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65 contributed 2 ETH (tx 0xaee4a4ed67193fda03cf7dd71928810c8b45e36e6ecb16da19afa3fd5d056bb7)
+Total raised: 2.0 ETH (goal 10.0 ETH)
+Fast-forwarding chain past the deadline (+65s)...
+Negative test: owner tries to withdraw an unmet goal...
+Reverted as expected: Error: VM Exception while processing transaction: reverted with reason string 'Funding goal not reached'
+Dave refund tx hash: 0x5b464219305e435ef54d43b3f3c65b59f6cdce1433e8b774427192de27dc5ac7
+Dave balance change: +2.0 ETH (gross, before gas)
+Contract balance after refund: 0.0 ETH
+Negative test: Dave tries to refund a second time...
+Reverted as expected: Error: VM Exception while processing transaction: reverted with reason string 'No contribution to refund'
+
+=== Crowdfunding experiment complete ===

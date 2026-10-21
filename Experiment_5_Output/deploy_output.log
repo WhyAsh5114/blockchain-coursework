@@ -1,0 +1,47 @@
+=== Accounts (Hardhat local network) ===
+Owner: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+Alice: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+
+SolidityBasics deployed at: 0x5FbDB2315678afecb367f032d93F642f64180aa3
+
+=== 1. State variables & data types ===
+Initial greeting: Hello, Blockchain!
+Initial fixedBytes: SOLIDITY
+unsignedNumber = 42
+signedNumber   = -17
+flag after toggle: true
+
+=== 2. Modifiers, events & access control ===
+GreetingChanged event: "Hello, Blockchain!" -> "Hi from the owner!"
+Negative test: non-owner (Alice) tries to change the greeting...
+Reverted as expected: Error: VM Exception while processing transaction: reverted with reason string 'Not the owner'
+
+=== 3. Payable functions & mappings ===
+Alice deposited 0.5 ETH (tx 0x3e33a644ca6677509b1581c23280badcd3bf0fe1ed497a93918afb655394e5f2)
+balances[Alice] = 0.5 ETH
+
+=== 4. Structs, arrays & control structures ===
+Added student Asha (age 20, marks 82)
+Added student Ravi (age 21, marks 67)
+Added student Meera (age 20, marks 45)
+Added student Zoya (age 22, marks 30)
+Total students: 4
+Average marks: 56
+Student #0: Asha, marks 82 -> classify() = "Distinction"
+Student #1: Ravi, marks 67 -> classify() = "First Class"
+Student #2: Meera, marks 45 -> classify() = "Pass"
+Student #3: Zoya, marks 30 -> classify() = "Fail"
+
+=== 5. Pure functions (arithmetic, ternary) ===
+add(15, 27) = 42
+isEven(10) = true
+isEven(7)  = false
+
+=== 6. Function visibility (internal via public wrapper) ===
+bumpCounter() call #1, tx 0x856c68727c...
+bumpCounter() call #2, tx 0xe1f865d1e4...
+bumpCounter() call #3, tx 0x3498034be3...
+Note: secretCounter itself is private and has no public getter,
+      it is only reachable indirectly through bumpCounter().
+
+=== Solidity Basics experiment complete ===

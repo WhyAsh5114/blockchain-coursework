@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Donation Tracker DApp</title>
+<style>
+ body{font-family:-apple-system,"Helvetica Neue",Arial,sans-serif;margin:0;background:#f4f6f8;color:#1a1a1a}
+ header{background:#2c3e50;color:#fff;padding:14px 24px;display:flex;justify-content:space-between;align-items:center}
+ main{max-width:860px;margin:20px auto;padding:0 20px;display:grid;gap:16px}
+ .card{background:#fff;border:1px solid #d8dde2;border-radius:8px;padding:16px 20px}
+ h2{margin:0 0 10px;font-size:1.05em;color:#2c3e50}
+ button{background:#2c3e50;color:#fff;border:0;border-radius:5px;padding:8px 16px;font-size:.95em;cursor:pointer}
+ button.alt{background:#8e44ad}
+ input,select{padding:7px;border:1px solid #bbb;border-radius:5px;font-size:.95em}
+ .mono{font-family:Menlo,monospace;font-size:.85em;word-break:break-all}
+ .kv{display:grid;grid-template-columns:170px 1fr;gap:4px 10px;font-size:.93em}
+ .badge{background:#27ae60;color:#fff;border-radius:10px;padding:2px 10px;font-size:.8em}
+ .badge.off{background:#c0392b}
+ table{width:100%;border-collapse:collapse;font-size:.9em}
+ th,td{text-align:left;padding:6px 8px;border-bottom:1px solid #e5e8eb}
+ #log{background:#0f1720;color:#9fe3a8;padding:10px;border-radius:6px;font-family:Menlo,monospace;font-size:.8em;min-height:60px;white-space:pre-wrap}
+</style></head>
+<body>
+<header><strong>Donation Tracker DApp</strong><span>Wallet: <span id="status" class="badge off">not connected</span></span></header>
+<main>
+ <div class="card"><h2>1. Wallet (injected EIP-1193 provider, like Metamask's window.ethereum)</h2>
+  <div class="kv"><span>Network</span><span id="net">-</span>
+   <span>Account</span><span><select id="acct"></select></span>
+   <span>Address</span><span id="addr" class="mono">-</span>
+   <span>Balance</span><span id="bal">-</span></div>
+  <p><button id="connect">Connect Wallet</button></p></div>
+ <div class="card"><h2>2. Contract</h2>
+  <div class="kv"><span>Address</span><span id="caddr" class="mono">-</span>
+   <span>Owner</span><span id="owner" class="mono">-</span>
+   <span>Total donated</span><span id="total">-</span>
+   <span>Donations</span><span id="count">-</span></div></div>
+ <div class="card"><h2>3. Donate (sends a signed transaction through the wallet)</h2>
+  <input id="amount" type="number" step="0.01" value="2.25" style="width:90px"> ETH &nbsp;
+  <input id="msg" value="Keep building!" style="width:300px"> &nbsp; <button id="donate">Donate</button>
+  &nbsp; <button id="withdraw" class="alt">Withdraw (owner only)</button></div>
+ <div class="card"><h2>4. Donations on-chain</h2>
+  <table><thead><tr><th>#</th><th>Donor</th><th>Amount (ETH)</th><th>Message</th></tr></thead><tbody id="rows"></tbody></table></div>
+ <div class="card"><h2>Transaction log</h2><div id="log">Waiting for wallet connection...</div></div>
+</main>
+<script src="ethers.umd.min.js"></script>
+<script>
+// --- Local wallet: an EIP-1193 provider injected as window.ethereum -----------------
+// Behaves like Metamask's injected provider: the page never sees a private key,
+// it just calls request({method,params}) and the wallet signs / forwards to the node.
+const RPC = "http://127.0.0.1:8548";
+let selected = 0, accounts = [];
+async function rpc(method, params = []) {
+  const r = await fetch(RPC, {method: "POST", headers: {"content-type": "application/json"},
+    body: JSON.stringify({jsonrpc: "2.0", id: Date.now(), method, params})});
+  const j = await r.json(); if (j.error) { const e = new Error(j.error.message); e.data = j.error.data; throw e; } return j.result;
+}
+window.ethereum = {
+  isLocalWallet: true,
+  async request({method, params = []}) {
+    if (method === "eth_requestAccounts" || method === "eth_accounts") { accounts = await rpc("eth_accounts"); return [accounts[selected]]; }
+    return rpc(method, params);
+  },
+  on() {}, removeListener() {}
+};
+// -----------------------------------------------------------------------------------
+const $ = id => document.getElementById(id);
+const log = s => { $("log").textContent = (new Date().toLocaleTimeString() + "  " + s + "\n") + ($("log").textContent.startsWith("Waiting") ? "" : $("log").textContent); };
+let provider, signer, contract, dep;
+
+async function refresh() {
+  const me = await signer.getAddress();
+  $("addr").textContent = me;
+  $("bal").textContent = Number(ethers.formatEther(await provider.getBalance(me))).toFixed(4) + " ETH";
+  $("owner").textContent = await contract.owner();
+  $("total").textContent = ethers.formatEther(await contract.totalDonated()) + " ETH";
+  const n = Number(await contract.donationCount()); $("count").textContent = n;
+  $("rows").innerHTML = "";
+  for (let i = 0; i < n; i++) {
+    const [d, a, m] = await contract.getDonation(i);
+    $("rows").innerHTML += `<tr><td>${i}</td><td class="mono">${d}</td><td>${ethers.formatEther(a)}</td><td>${m}</td></tr>`;
+  }
+}
+async function connect() {
+  dep = await (await fetch("deployment.json")).json();
+  provider = new ethers.BrowserProvider(window.ethereum);
+  await provider.send("eth_requestAccounts", []);
+  signer = await provider.getSigner();
+  const net = await provider.getNetwork();
+  $("net").textContent = "Hardhat Local (chainId " + net.chainId + ")";
+  $("status").textContent = "connected"; $("status").className = "badge";
+  accounts = await rpc("eth_accounts");
+  $("acct").innerHTML = accounts.slice(0, 5).map((a, i) => `<option value="${i}" ${i===selected?"selected":""}>Account #${i} (${a.slice(0,8)}...)</option>`).join("");
+  contract = new ethers.Contract(dep.address, dep.abi, signer);
+  $("caddr").textContent = dep.address;
+  log("Wallet connected: " + await signer.getAddress());
+  await refresh();
+}
+$("connect").onclick = () => connect().catch(e => log("ERROR " + e.message));
+$("acct").onchange = async e => { selected = Number(e.target.value); await connect(); };
+$("donate").onclick = async () => {
+  try {
+    const tx = await contract.donate($("msg").value, {value: ethers.parseEther($("amount").value)});
+    log("donate() sent, tx " + tx.hash); const rc = await tx.wait();
+    log("Mined in block " + rc.blockNumber + ", gas used " + rc.gasUsed); await refresh();
+  } catch (e) { log("donate() failed: " + (e.reason || e.shortMessage || e.message)); }
+};
+$("withdraw").onclick = async () => {
+  try {
+    const tx = await contract.withdraw(); log("withdraw() sent, tx " + tx.hash); const rc = await tx.wait();
+    log("Withdrawn in block " + rc.blockNumber); await refresh();
+  } catch (e) { log("withdraw() failed: " + (e.reason || e.shortMessage || e.message)); }
+};
+</script></body></html>

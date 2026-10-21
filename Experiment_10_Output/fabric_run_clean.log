@@ -1,0 +1,412 @@
++ export 'PATH=/Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/bin:/Users/anonjr/.local/bin:/Users/anonjr/.bb:/Users/anonjr/.bb:/Users/anonjr/.bun/bin:/opt/homebrew/opt/openjdk@21/bin:/Users/anonjr/.nvm/versions/node/v24.19.0/bin:/Users/anonjr/Library/Application Support/Code - Insiders/User/globalStorage/github.copilot-chat/debugCommand:/Users/anonjr/Library/Application Support/Code - Insiders/User/globalStorage/github.copilot-chat/copilotCli:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/Library/Apple/usr/bin:/opt/homebrew/bin:/Users/anonjr/.local/bin:/Users/anonjr/Library/Application Support/Code - Insiders/User/globalStorage/github.copilot-chat/debugCommand:/Users/anonjr/Library/Application Support/Code - Insiders/User/globalStorage/github.copilot-chat/copilotCli:/Users/anonjr/.bb:/Users/anonjr/.bun/bin:/opt/homebrew/opt/openjdk@21/bin:/Users/anonjr/Library/pnpm:/Users/anonjr/.nvm/versions/node/v24.19.0/bin:/opt/homebrew/sbin:/Users/anonjr/.orbstack/bin:/Users/anonjr/.lmstudio/bin:/Users/anonjr/.nargo/bin:/Users/anonjr/.vscode-insiders/extensions/ms-python.debugpy-2026.6.0-darwin-arm64/bundled/scripts/noConfigScripts:/Users/anonjr/.orbstack/bin:/Users/anonjr/.lmstudio/bin:/Users/anonjr/.nargo/bin'
++ PATH='/Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/bin:/Users/anonjr/.local/bin:/Users/anonjr/.bb:/Users/anonjr/.bb:/Users/anonjr/.bun/bin:/opt/homebrew/opt/openjdk@21/bin:/Users/anonjr/.nvm/versions/node/v24.19.0/bin:/Users/anonjr/Library/Application Support/Code - Insiders/User/globalStorage/github.copilot-chat/debugCommand:/Users/anonjr/Library/Application Support/Code - Insiders/User/globalStorage/github.copilot-chat/copilotCli:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/Library/Apple/usr/bin:/opt/homebrew/bin:/Users/anonjr/.local/bin:/Users/anonjr/Library/Application Support/Code - Insiders/User/globalStorage/github.copilot-chat/debugCommand:/Users/anonjr/Library/Application Support/Code - Insiders/User/globalStorage/github.copilot-chat/copilotCli:/Users/anonjr/.bb:/Users/anonjr/.bun/bin:/opt/homebrew/opt/openjdk@21/bin:/Users/anonjr/Library/pnpm:/Users/anonjr/.nvm/versions/node/v24.19.0/bin:/opt/homebrew/sbin:/Users/anonjr/.orbstack/bin:/Users/anonjr/.lmstudio/bin:/Users/anonjr/.nargo/bin:/Users/anonjr/.vscode-insiders/extensions/ms-python.debugpy-2026.6.0-darwin-arm64/bundled/scripts/noConfigScripts:/Users/anonjr/.orbstack/bin:/Users/anonjr/.lmstudio/bin:/Users/anonjr/.nargo/bin'
++ export FABRIC_CFG_PATH=/Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/config
++ FABRIC_CFG_PATH=/Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/config
++ peer version
+peer:
+ Version: v2.5.16
+ Commit SHA: f871cf9
+ Go version: go1.26.4
+ OS/Arch: darwin/arm64
+ Chaincode:
+  Base Docker Label: org.hyperledger.fabric
+  Docker Namespace: hyperledger
+
++ cd fabric-samples/test-network
++ ./network.sh down
+Using docker and docker-compose
+Stopping network
+Error response from daemon: get docker_orderer.example.com: no such volume
+Error response from daemon: get docker_peer0.org1.example.com: no such volume
+Error response from daemon: get docker_peer0.org2.example.com: no such volume
+Removing remaining containers
+Removing generated chaincode docker images
+Unable to find image 'busybox:latest' locally
+latest: Pulling from library/busybox
+55d2dadd4bbc: Pulling fs layer
+55d2dadd4bbc: Download complete
+55d2dadd4bbc: Pull complete
+Digest: sha256:fd7dc98638c8e305f4dc34e979f1c0fdfdcaeb0fbf8fcff77ae834b6da3d7e6e
+Status: Downloaded newer image for busybox:latest
++ ./network.sh up createChannel
+Using docker and docker-compose
+Creating channel 'mychannel'.
+If network is not up, starting nodes with CLI timeout of '5' tries and CLI delay of '3' seconds and using database 'leveldb with crypto from 'cryptogen'
+Bringing up network
+LOCAL_VERSION=v2.5.16
+DOCKER_IMAGE_VERSION=v2.5.16
+/Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/../bin/cryptogen
+Generating certificates using cryptogen tool
+Creating Org1 Identities
++ cryptogen generate --config=./organizations/cryptogen/crypto-config-org1.yaml --output=organizations
+org1.example.com
++ res=0
+Creating Org2 Identities
++ cryptogen generate --config=./organizations/cryptogen/crypto-config-org2.yaml --output=organizations
+org2.example.com
++ res=0
+Creating Orderer Org Identities
++ cryptogen generate --config=./organizations/cryptogen/crypto-config-orderer.yaml --output=organizations
++ res=0
+Generating CCP files for Org1 and Org2
+ Network fabric_test Creating 
+ Network fabric_test Created 
+ Volume compose_peer0.org2.example.com Creating 
+ Volume compose_peer0.org2.example.com Created 
+ Volume compose_orderer.example.com Creating 
+ Volume compose_orderer.example.com Created 
+ Volume compose_peer0.org1.example.com Creating 
+ Volume compose_peer0.org1.example.com Created 
+ Container peer0.org1.example.com Creating 
+ Container peer0.org2.example.com Creating 
+ Container orderer.example.com Creating 
+ Container peer0.org2.example.com Created 
+ Container peer0.org1.example.com Created 
+ Container orderer.example.com Created 
+ Container peer0.org2.example.com Starting 
+ Container orderer.example.com Starting 
+ Container peer0.org1.example.com Starting 
+ Container peer0.org2.example.com Started 
+ Container orderer.example.com Started 
+ Container peer0.org1.example.com Started 
+CONTAINER ID   IMAGE                                                                     COMMAND                   CREATED        STATUS                          PORTS                                                                                                                                   NAMES
+51f5732d0cf5   hyperledger/fabric-peer:latest                                            "peer node start"         1 second ago   Up Less than a second           0.0.0.0:7051->7051/tcp, [::]:7051->7051/tcp, 0.0.0.0:9444->9444/tcp, [::]:9444->9444/tcp                                                peer0.org1.example.com
+1a7aa7fff77f   hyperledger/fabric-orderer:latest                                         "orderer"                 1 second ago   Up Less than a second           0.0.0.0:7050->7050/tcp, [::]:7050->7050/tcp, 0.0.0.0:7053->7053/tcp, [::]:7053->7053/tcp, 0.0.0.0:9443->9443/tcp, [::]:9443->9443/tcp   orderer.example.com
+7d470684feb4   hyperledger/fabric-peer:latest                                            "peer node start"         1 second ago   Up Less than a second           0.0.0.0:9051->9051/tcp, [::]:9051->9051/tcp, 7051/tcp, 0.0.0.0:9445->9445/tcp, [::]:9445->9445/tcp                                      peer0.org2.example.com
+1fb7a4181295   dajobe/hbase                                                              "/opt/hbase-server"       31 hours ago   Exited (137) 31 hours ago                                                                                                                                               bda-hbase
+63a78226fa35   apache/hive:4.0.0                                                         "sh -c /entrypoint.sh"    32 hours ago   Exited (137) 26 hours ago                                                                                                                                               bda-hive-server
+43bcb67bffcf   postgres:16-alpine                                                        "docker-entrypoint.s…"    8 days ago     Exited (0) 32 hours ago                                                                                                                                                 devcontainer-db-1
+021c79cff8d8   ghcr.io/devfolioco/devfolio-public-api:latest.metadata-cli                "docker-entrypoint.s…"    3 weeks ago    Exited (0) 2 weeks ago                                                                                                                                                  devfolio_backend-graphql-engine-public-metadata-1
+d6a93baffb5d   ghcr.io/devfolioco/devfolio-api:latest                                    "docker-entrypoint.s…"    3 weeks ago    Restarting (1) 54 seconds ago                                                                                                                                           api
+a0974406da2e   ghcr.io/devfolioco/devfolio-backend:latest.seed-migrations-metadata-cli   "docker-entrypoint.sh"    3 weeks ago    Exited (0) 3 weeks ago                                                                                                                                                  devfolio_backend-graphql-engine-migrations-1
+833155840ed3   elasticsearch:7.14.0                                                      "/bin/tini -- /usr/l…"    3 weeks ago    Exited (143) 2 weeks ago                                                                                                                                                devfolio_backend-elasticsearch-1
+dfc7fa0885f4   ghcr.io/devfolioco/postgres16:local                                       "docker-entrypoint.s…"    3 weeks ago    Up 32 hours (healthy)           0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp                                                                                             devfolio_backend-postgres-1
+b11bfb8aa70b   n8nio/n8n:latest                                                          "tini -- /docker-ent…"    3 weeks ago    Exited (0) 2 weeks ago                                                                                                                                                  devfolio_backend-n8n-1
+c72428aee789   redis:alpine                                                              "docker-entrypoint.s…"    3 weeks ago    Up 32 hours (healthy)           0.0.0.0:6379->6379/tcp, [::]:6379->6379/tcp                                                                                             redis
+f42044e05fd8   hasura/graphql-engine:v2.6.1                                              "graphql-engine serve"    3 weeks ago    Up 32 hours                     0.0.0.0:5003->8080/tcp, [::]:5003->8080/tcp                                                                                             devfolio_backend-graphql-engine-public-1
+294669f8defb   hasura/graphql-engine:v2.20.1                                             "/bin/sh -c '\"${HGE_…"   3 weeks ago    Up 32 hours (healthy)           0.0.0.0:5002->8080/tcp, [::]:5002->8080/tcp                                                                                             devfolio_backend-graphql-engine-1
+5387e2223dc2   ghcr.io/devfolioco/elastic_sync:latest                                    "./devfolio-elastics…"    3 weeks ago    Exited (0) 2 weeks ago                                                                                                                                                  devfolio_backend-elastic_sync-1
+88582ebb9c8e   ghcr.io/devfolioco/datalayer:latest                                       "docker-entrypoint.s…"    3 weeks ago    Exited (137) 4 hours ago                                                                                                                                                datalayer
+5001576269bc   ghcr.io/devfolioco/notification-worker:latest                             "docker-entrypoint.s…"    3 weeks ago    Up 32 hours (unhealthy)         3000/tcp, 0.0.0.0:3100->3100/tcp, [::]:3100->3100/tcp                                                                                   devfolio_backend-notification-worker-1
+80143da2de57   ghcr.io/spruceid/siwe_oidc:latest                                         "siwe-oidc"               3 weeks ago    Exited (137) 2 weeks ago                                                                                                                                                devfolio_backend-siwe-oidc-1
+bdec3caf7c78   apache/hadoop:3                                                           "/usr/local/bin/dumb…"    5 weeks ago    Exited (143) 26 hours ago                                                                                                                                               bda-hadoop
+b5ad025a96ee   apache/hadoop:3                                                           "bash -c 'mkdir -p /…"    5 weeks ago    Exited (0) 32 hours ago                                                                                                                                                 bda-init-hadoop-data-1
+b545054b42cf   apache/hive:4.0.0                                                         "sh -c /entrypoint.sh"    6 weeks ago    Exited (137) 26 hours ago                                                                                                                                               bda-hive-metastore
+18990cbd207c   apache/hive:4.0.0                                                         "bash -c 'mkdir -p /…"    6 weeks ago    Exited (0) 32 hours ago                                                                                                                                                 bda-init-hive-metastore-data-1
+e3e9c4e65ed9   mysql:8.4                                                                 "docker-entrypoint.s…"    6 weeks ago    Exited (0) 4 weeks ago                                                                                                                                                  bda-mysql
+Using docker and docker-compose
+Generating channel genesis block 'mychannel.block'
+Using organization 1
+/Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/../bin/configtxgen
++ '[' 0 -eq 1 ']'
++ configtxgen -profile ChannelUsingRaft -outputBlock ./channel-artifacts/mychannel.block -channelID mychannel
+2026-10-13 18:20:33.504 IST 0001 INFO [common.tools.configtxgen] main -> Loading configuration
+2026-10-13 18:20:33.507 IST 0002 INFO [common.tools.configtxgen.localconfig] completeInitialization -> orderer type: etcdraft
+2026-10-13 18:20:33.508 IST 0003 INFO [common.tools.configtxgen.localconfig] completeInitialization -> Orderer.EtcdRaft.Options unset, setting to tick_interval:"500ms" election_tick:10 heartbeat_tick:1 max_inflight_blocks:5 snapshot_interval_size:16777216 
+2026-10-13 18:20:33.508 IST 0004 INFO [common.tools.configtxgen.localconfig] Load -> Loaded configuration: /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/configtx/configtx.yaml
+2026-10-13 18:20:33.510 IST 0005 INFO [common.tools.configtxgen] doOutputBlock -> Generating genesis block
+2026-10-13 18:20:33.510 IST 0006 INFO [common.tools.configtxgen] doOutputBlock -> Creating application channel genesis block
+2026-10-13 18:20:33.510 IST 0007 INFO [common.tools.configtxgen] doOutputBlock -> Writing genesis block
++ res=0
+Creating channel mychannel
+Adding orderers
++ . scripts/orderer.sh mychannel
++ '[' 0 -eq 1 ']'
++ res=0
+Status: 201
+{
+	"name": "mychannel",
+	"url": "/participation/v1/channels/mychannel",
+	"consensusRelation": "consenter",
+	"status": "active",
+	"height": 1
+}
+
+Channel 'mychannel' created
+Joining org1 peer to the channel...
+Using organization 1
++ peer channel join -b ./channel-artifacts/mychannel.block
++ res=0
+2026-10-13 18:20:40.531 IST 0001 INFO [channelCmd] InitCmdFactory -> Endorser and orderer connections initialized
+2026-10-13 18:20:40.573 IST 0002 INFO [channelCmd] executeJoin -> Successfully submitted proposal to join channel
+Joining org2 peer to the channel...
+Using organization 2
++ peer channel join -b ./channel-artifacts/mychannel.block
++ res=0
+2026-10-13 18:20:43.665 IST 0001 INFO [channelCmd] InitCmdFactory -> Endorser and orderer connections initialized
+2026-10-13 18:20:43.725 IST 0002 INFO [channelCmd] executeJoin -> Successfully submitted proposal to join channel
+Setting anchor peer for org1...
+Using organization 1
+Fetching channel config for channel mychannel
+Using organization 1
+Fetching the most recent configuration block for the channel
+++ peer channel fetch config /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/config_block.pb -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com -c mychannel --tls --cafile /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/organizations/ordererOrganizations/example.com/tlsca/tlsca.example.com-cert.pem
+2026-10-13 18:20:43.784 IST 0001 INFO [channelCmd] InitCmdFactory -> Endorser and orderer connections initialized
+2026-10-13 18:20:43.786 IST 0002 INFO [cli.common] readBlock -> Received block: 0
+2026-10-13 18:20:43.787 IST 0003 INFO [channelCmd] fetch -> Retrieving last config block: 0
+2026-10-13 18:20:43.787 IST 0004 INFO [cli.common] readBlock -> Received block: 0
+Decoding config block to JSON and isolating config to /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/Org1MSPconfig.json
+++ configtxlator proto_decode --input /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/config_block.pb --type common.Block --output /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/config_block.json
+++ jq '.data.data[0].payload.data.config' /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/config_block.json
+++ res=0
+Generating anchor peer update transaction for Org1 on channel mychannel
+++ jq '.channel_group.groups.Application.groups.Org1MSP.values += {"AnchorPeers":{"mod_policy": "Admins","value":{"anchor_peers": [{"host": "peer0.org1.example.com","port": 7051}]},"version": "0"}}' /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/Org1MSPconfig.json
+++ res=0
+++ configtxlator proto_encode --input /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/Org1MSPconfig.json --type common.Config --output /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/original_config.pb
+++ configtxlator proto_encode --input /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/Org1MSPmodified_config.json --type common.Config --output /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/modified_config.pb
+++ configtxlator compute_update --channel_id mychannel --original /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/original_config.pb --updated /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/modified_config.pb --output /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/config_update.pb
+++ configtxlator proto_decode --input /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/config_update.pb --type common.ConfigUpdate --output /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/config_update.json
+++ jq .
++++ cat /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/config_update.json
+++ echo '{"payload":{"header":{"channel_header":{"channel_id":"mychannel", "type":2}},"data":{"config_update":{' '"channel_id":' '"mychannel",' '"isolated_data":' '{},' '"read_set":' '{' '"groups":' '{' '"Application":' '{' '"groups":' '{' '"Org1MSP":' '{' '"groups":' '{},' '"mod_policy":' '"",' '"policies":' '{' '"Admins":' '{' '"mod_policy":' '"",' '"policy":' null, '"version":' '"0"' '},' '"Endorsement":' '{' '"mod_policy":' '"",' '"policy":' null, '"version":' '"0"' '},' '"Readers":' '{' '"mod_policy":' '"",' '"policy":' null, '"version":' '"0"' '},' '"Writers":' '{' '"mod_policy":' '"",' '"policy":' null, '"version":' '"0"' '}' '},' '"values":' '{' '"MSP":' '{' '"mod_policy":' '"",' '"value":' null, '"version":' '"0"' '}' '},' '"version":' '"0"' '}' '},' '"mod_policy":' '"",' '"policies":' '{},' '"values":' '{},' '"version":' '"0"' '}' '},' '"mod_policy":' '"",' '"policies":' '{},' '"values":' '{},' '"version":' '"0"' '},' '"write_set":' '{' '"groups":' '{' '"Application":' '{' '"groups":' '{' '"Org1MSP":' '{' '"groups":' '{},' '"mod_policy":' '"Admins",' '"policies":' '{' '"Admins":' '{' '"mod_policy":' '"",' '"policy":' null, '"version":' '"0"' '},' '"Endorsement":' '{' '"mod_policy":' '"",' '"policy":' null, '"version":' '"0"' '},' '"Readers":' '{' '"mod_policy":' '"",' '"policy":' null, '"version":' '"0"' '},' '"Writers":' '{' '"mod_policy":' '"",' '"policy":' null, '"version":' '"0"' '}' '},' '"values":' '{' '"AnchorPeers":' '{' '"mod_policy":' '"Admins",' '"value":' '{' '"anchor_peers":' '[' '{' '"host":' '"peer0.org1.example.com",' '"port":' 7051 '}' ']' '},' '"version":' '"0"' '},' '"MSP":' '{' '"mod_policy":' '"",' '"value":' null, '"version":' '"0"' '}' '},' '"version":' '"1"' '}' '},' '"mod_policy":' '"",' '"policies":' '{},' '"values":' '{},' '"version":' '"0"' '}' '},' '"mod_policy":' '"",' '"policies":' '{},' '"values":' '{},' '"version":' '"0"' '}' '}}}}'
+++ configtxlator proto_encode --input /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/config_update_in_envelope.json --type common.Envelope --output /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/Org1MSPanchors.tx
+2026-10-13 18:20:44.802 IST 0001 INFO [channelCmd] InitCmdFactory -> Endorser and orderer connections initialized
+2026-10-13 18:20:44.814 IST 0002 INFO [channelCmd] update -> Successfully submitted channel update
+Anchor peer set for org 'Org1MSP' on channel 'mychannel'
+Setting anchor peer for org2...
+Using organization 2
+Fetching channel config for channel mychannel
+Using organization 2
+Fetching the most recent configuration block for the channel
+++ peer channel fetch config /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/config_block.pb -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com -c mychannel --tls --cafile /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/organizations/ordererOrganizations/example.com/tlsca/tlsca.example.com-cert.pem
+2026-10-13 18:20:44.859 IST 0001 INFO [channelCmd] InitCmdFactory -> Endorser and orderer connections initialized
+2026-10-13 18:20:44.861 IST 0002 INFO [cli.common] readBlock -> Received block: 1
+2026-10-13 18:20:44.861 IST 0003 INFO [channelCmd] fetch -> Retrieving last config block: 1
+2026-10-13 18:20:44.862 IST 0004 INFO [cli.common] readBlock -> Received block: 1
+Decoding config block to JSON and isolating config to /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/Org2MSPconfig.json
+++ configtxlator proto_decode --input /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/config_block.pb --type common.Block --output /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/config_block.json
+++ jq '.data.data[0].payload.data.config' /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/config_block.json
+++ res=0
+Generating anchor peer update transaction for Org2 on channel mychannel
+++ jq '.channel_group.groups.Application.groups.Org2MSP.values += {"AnchorPeers":{"mod_policy": "Admins","value":{"anchor_peers": [{"host": "peer0.org2.example.com","port": 9051}]},"version": "0"}}' /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/Org2MSPconfig.json
+++ res=0
+++ configtxlator proto_encode --input /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/Org2MSPconfig.json --type common.Config --output /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/original_config.pb
+++ configtxlator proto_encode --input /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/Org2MSPmodified_config.json --type common.Config --output /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/modified_config.pb
+++ configtxlator compute_update --channel_id mychannel --original /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/original_config.pb --updated /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/modified_config.pb --output /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/config_update.pb
+++ configtxlator proto_decode --input /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/config_update.pb --type common.ConfigUpdate --output /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/config_update.json
+++ jq .
++++ cat /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/config_update.json
+++ echo '{"payload":{"header":{"channel_header":{"channel_id":"mychannel", "type":2}},"data":{"config_update":{' '"channel_id":' '"mychannel",' '"isolated_data":' '{},' '"read_set":' '{' '"groups":' '{' '"Application":' '{' '"groups":' '{' '"Org2MSP":' '{' '"groups":' '{},' '"mod_policy":' '"",' '"policies":' '{' '"Admins":' '{' '"mod_policy":' '"",' '"policy":' null, '"version":' '"0"' '},' '"Endorsement":' '{' '"mod_policy":' '"",' '"policy":' null, '"version":' '"0"' '},' '"Readers":' '{' '"mod_policy":' '"",' '"policy":' null, '"version":' '"0"' '},' '"Writers":' '{' '"mod_policy":' '"",' '"policy":' null, '"version":' '"0"' '}' '},' '"values":' '{' '"MSP":' '{' '"mod_policy":' '"",' '"value":' null, '"version":' '"0"' '}' '},' '"version":' '"0"' '}' '},' '"mod_policy":' '"",' '"policies":' '{},' '"values":' '{},' '"version":' '"0"' '}' '},' '"mod_policy":' '"",' '"policies":' '{},' '"values":' '{},' '"version":' '"0"' '},' '"write_set":' '{' '"groups":' '{' '"Application":' '{' '"groups":' '{' '"Org2MSP":' '{' '"groups":' '{},' '"mod_policy":' '"Admins",' '"policies":' '{' '"Admins":' '{' '"mod_policy":' '"",' '"policy":' null, '"version":' '"0"' '},' '"Endorsement":' '{' '"mod_policy":' '"",' '"policy":' null, '"version":' '"0"' '},' '"Readers":' '{' '"mod_policy":' '"",' '"policy":' null, '"version":' '"0"' '},' '"Writers":' '{' '"mod_policy":' '"",' '"policy":' null, '"version":' '"0"' '}' '},' '"values":' '{' '"AnchorPeers":' '{' '"mod_policy":' '"Admins",' '"value":' '{' '"anchor_peers":' '[' '{' '"host":' '"peer0.org2.example.com",' '"port":' 9051 '}' ']' '},' '"version":' '"0"' '},' '"MSP":' '{' '"mod_policy":' '"",' '"value":' null, '"version":' '"0"' '}' '},' '"version":' '"1"' '}' '},' '"mod_policy":' '"",' '"policies":' '{},' '"values":' '{},' '"version":' '"0"' '}' '},' '"mod_policy":' '"",' '"policies":' '{},' '"values":' '{},' '"version":' '"0"' '}' '}}}}'
+++ configtxlator proto_encode --input /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/config_update_in_envelope.json --type common.Envelope --output /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/channel-artifacts/Org2MSPanchors.tx
+2026-10-13 18:20:44.985 IST 0001 INFO [channelCmd] InitCmdFactory -> Endorser and orderer connections initialized
+2026-10-13 18:20:44.993 IST 0002 INFO [channelCmd] update -> Successfully submitted channel update
+Anchor peer set for org 'Org2MSP' on channel 'mychannel'
+Channel 'mychannel' joined
++ ./network.sh deployCC -ccn basic -ccp ../asset-transfer-basic/chaincode-javascript -ccl javascript
+Using docker and docker-compose
+deploying chaincode on channel 'mychannel'
+executing with the following
+- CHANNEL_NAME: mychannel
+- CC_NAME: basic
+- CC_SRC_PATH: ../asset-transfer-basic/chaincode-javascript
+- CC_SRC_LANGUAGE: javascript
+- CC_VERSION: 1.0
+- CC_SEQUENCE: auto
+- CC_END_POLICY: NA
+- CC_COLL_CONFIG: NA
+- CC_INIT_FCN: NA
+- DELAY: 3
+- MAX_RETRY: 5
+- VERBOSE: false
+executing with the following
+- CC_NAME: basic
+- CC_SRC_PATH: ../asset-transfer-basic/chaincode-javascript
+- CC_SRC_LANGUAGE: javascript
+- CC_VERSION: 1.0
++ '[' false = true ']'
++ peer lifecycle chaincode package basic.tar.gz --path ../asset-transfer-basic/chaincode-javascript --lang node --label basic_1.0
++ res=0
+Chaincode is packaged
+Installing chaincode on peer0.org1...
+Using organization 1
++ peer lifecycle chaincode queryinstalled --output json
++ jq -r 'try (.installed_chaincodes[].package_id)'
++ grep '^basic_1.0:1d4d445573112813889f87c307bc2b5fbe664c87b24c035bee15cbcc7f59b629$'
++ test 1 -ne 0
++ peer lifecycle chaincode install basic.tar.gz
++ res=0
+2026-10-13 18:21:03.756 IST 0001 INFO [cli.lifecycle.chaincode] submitInstallProposal -> Installed remotely: response:<status:200 payload:"\nJbasic_1.0:1d4d445573112813889f87c307bc2b5fbe664c87b24c035bee15cbcc7f59b629\022\tbasic_1.0" > 
+2026-10-13 18:21:03.756 IST 0002 INFO [cli.lifecycle.chaincode] submitInstallProposal -> Chaincode code package identifier: basic_1.0:1d4d445573112813889f87c307bc2b5fbe664c87b24c035bee15cbcc7f59b629
+Chaincode is installed on peer0.org1
+Install chaincode on peer0.org2...
+Using organization 2
++ peer lifecycle chaincode queryinstalled --output json
++ jq -r 'try (.installed_chaincodes[].package_id)'
++ grep '^basic_1.0:1d4d445573112813889f87c307bc2b5fbe664c87b24c035bee15cbcc7f59b629$'
++ test 1 -ne 0
++ peer lifecycle chaincode install basic.tar.gz
++ res=0
+2026-10-13 18:21:08.372 IST 0001 INFO [cli.lifecycle.chaincode] submitInstallProposal -> Installed remotely: response:<status:200 payload:"\nJbasic_1.0:1d4d445573112813889f87c307bc2b5fbe664c87b24c035bee15cbcc7f59b629\022\tbasic_1.0" > 
+2026-10-13 18:21:08.373 IST 0002 INFO [cli.lifecycle.chaincode] submitInstallProposal -> Chaincode code package identifier: basic_1.0:1d4d445573112813889f87c307bc2b5fbe664c87b24c035bee15cbcc7f59b629
+Chaincode is installed on peer0.org2
+++ peer lifecycle chaincode querycommitted --channelID mychannel --name basic
+++ sed -n '/Version:/{s/.*Sequence: //; s/, Endorsement Plugin:.*$//; p;}'
+Error: query failed with status: 404 - namespace basic is not defined
++ COMMITTED_CC_SEQUENCE=
++ res=0
+Using organization 1
++ peer lifecycle chaincode queryinstalled --output json
++ jq -r 'try (.installed_chaincodes[].package_id)'
++ grep '^basic_1.0:1d4d445573112813889f87c307bc2b5fbe664c87b24c035bee15cbcc7f59b629$'
++ res=0
+basic_1.0:1d4d445573112813889f87c307bc2b5fbe664c87b24c035bee15cbcc7f59b629
+Query installed successful on peer0.org1 on channel
+Using organization 1
++ peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/organizations/ordererOrganizations/example.com/tlsca/tlsca.example.com-cert.pem --channelID mychannel --name basic --version 1.0 --package-id basic_1.0:1d4d445573112813889f87c307bc2b5fbe664c87b24c035bee15cbcc7f59b629 --sequence 1
++ res=0
+2026-10-13 18:21:10.603 IST 0001 INFO [chaincodeCmd] ClientWait -> txid [cc0e7cb6f803ea8f0838f9380d15e6555ed006f3d23ad18176624269cb42a0f6] committed with status (VALID) at localhost:7051
+Chaincode definition approved on peer0.org1 on channel 'mychannel'
+Using organization 1
+Checking the commit readiness of the chaincode definition on peer0.org1 on channel 'mychannel'...
+Attempting to check the commit readiness of the chaincode definition on peer0.org1, Retry after 3 seconds.
++ peer lifecycle chaincode checkcommitreadiness --channelID mychannel --name basic --version 1.0 --sequence 1 --output json
++ res=0
+{
+	"approvals": {
+		"Org1MSP": true,
+		"Org2MSP": false
+	}
+}
+Checking the commit readiness of the chaincode definition successful on peer0.org1 on channel 'mychannel'
+Using organization 2
+Checking the commit readiness of the chaincode definition on peer0.org2 on channel 'mychannel'...
+Attempting to check the commit readiness of the chaincode definition on peer0.org2, Retry after 3 seconds.
++ peer lifecycle chaincode checkcommitreadiness --channelID mychannel --name basic --version 1.0 --sequence 1 --output json
++ res=0
+{
+	"approvals": {
+		"Org1MSP": true,
+		"Org2MSP": false
+	}
+}
+Checking the commit readiness of the chaincode definition successful on peer0.org2 on channel 'mychannel'
+Using organization 2
++ peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/organizations/ordererOrganizations/example.com/tlsca/tlsca.example.com-cert.pem --channelID mychannel --name basic --version 1.0 --package-id basic_1.0:1d4d445573112813889f87c307bc2b5fbe664c87b24c035bee15cbcc7f59b629 --sequence 1
++ res=0
+2026-10-13 18:21:18.936 IST 0001 INFO [chaincodeCmd] ClientWait -> txid [5d8d0e2c81c2f198254a92ad142598b71a9b55e5d72bf6042c6142422841f874] committed with status (VALID) at localhost:9051
+Chaincode definition approved on peer0.org2 on channel 'mychannel'
+Using organization 1
+Checking the commit readiness of the chaincode definition on peer0.org1 on channel 'mychannel'...
+Attempting to check the commit readiness of the chaincode definition on peer0.org1, Retry after 3 seconds.
++ peer lifecycle chaincode checkcommitreadiness --channelID mychannel --name basic --version 1.0 --sequence 1 --output json
++ res=0
+{
+	"approvals": {
+		"Org1MSP": true,
+		"Org2MSP": true
+	}
+}
+Checking the commit readiness of the chaincode definition successful on peer0.org1 on channel 'mychannel'
+Using organization 2
+Checking the commit readiness of the chaincode definition on peer0.org2 on channel 'mychannel'...
+Attempting to check the commit readiness of the chaincode definition on peer0.org2, Retry after 3 seconds.
++ peer lifecycle chaincode checkcommitreadiness --channelID mychannel --name basic --version 1.0 --sequence 1 --output json
++ res=0
+{
+	"approvals": {
+		"Org1MSP": true,
+		"Org2MSP": true
+	}
+}
+Checking the commit readiness of the chaincode definition successful on peer0.org2 on channel 'mychannel'
+Using organization 1
+Using organization 2
++ peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/organizations/ordererOrganizations/example.com/tlsca/tlsca.example.com-cert.pem --channelID mychannel --name basic --peerAddresses localhost:7051 --tlsRootCertFiles /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/tlsca/tlsca.org1.example.com-cert.pem --peerAddresses localhost:9051 --tlsRootCertFiles /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/tlsca/tlsca.org2.example.com-cert.pem --version 1.0 --sequence 1
++ res=0
+2026-10-13 18:21:27.314 IST 0001 INFO [chaincodeCmd] ClientWait -> txid [220c5d85a1d0a837844ff1fb26cc94b31af3ead445662ae988d02a0b1787e4ed] committed with status (VALID) at localhost:7051
+2026-10-13 18:21:27.316 IST 0002 INFO [chaincodeCmd] ClientWait -> txid [220c5d85a1d0a837844ff1fb26cc94b31af3ead445662ae988d02a0b1787e4ed] committed with status (VALID) at localhost:9051
+Chaincode definition committed on channel 'mychannel'
+Using organization 1
+Querying chaincode definition on peer0.org1 on channel 'mychannel'...
+Attempting to Query committed status on peer0.org1, Retry after 3 seconds.
++ peer lifecycle chaincode querycommitted --channelID mychannel --name basic
++ res=0
+Committed chaincode definition for chaincode 'basic' on channel 'mychannel':
+Version: 1.0, Sequence: 1, Endorsement Plugin: escc, Validation Plugin: vscc, Approvals: [Org1MSP: true, Org2MSP: true]
+Query chaincode definition successful on peer0.org1 on channel 'mychannel'
+Using organization 2
+Querying chaincode definition on peer0.org2 on channel 'mychannel'...
+Attempting to Query committed status on peer0.org2, Retry after 3 seconds.
++ peer lifecycle chaincode querycommitted --channelID mychannel --name basic
++ res=0
+Committed chaincode definition for chaincode 'basic' on channel 'mychannel':
+Version: 1.0, Sequence: 1, Endorsement Plugin: escc, Validation Plugin: vscc, Approvals: [Org1MSP: true, Org2MSP: true]
+Query chaincode definition successful on peer0.org2 on channel 'mychannel'
+Chaincode initialization is not required
++ export CORE_PEER_TLS_ENABLED=true
++ CORE_PEER_TLS_ENABLED=true
++ export CORE_PEER_LOCALMSPID=Org1MSP
++ CORE_PEER_LOCALMSPID=Org1MSP
++ export CORE_PEER_TLS_ROOTCERT_FILE=/Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
++ CORE_PEER_TLS_ROOTCERT_FILE=/Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
++ export CORE_PEER_MSPCONFIGPATH=/Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
++ CORE_PEER_MSPCONFIGPATH=/Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
++ export CORE_PEER_ADDRESS=localhost:7051
++ CORE_PEER_ADDRESS=localhost:7051
++ ORDERER_CA=/Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
++ ORG2_TLS=/Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt
++ INVOKE=(peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile "$ORDERER_CA" -C mychannel -n basic --peerAddresses localhost:7051 --tlsRootCertFiles "$CORE_PEER_TLS_ROOTCERT_FILE" --peerAddresses localhost:9051 --tlsRootCertFiles "$ORG2_TLS")
++ peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n basic --peerAddresses localhost:7051 --tlsRootCertFiles /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt --peerAddresses localhost:9051 --tlsRootCertFiles /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt -c '{"function":"InitLedger","Args":[]}'
+2026-10-13 18:21:33.634 IST 0001 INFO [chaincodeCmd] chaincodeInvokeOrQuery -> Chaincode invoke successful. result: status:200 
++ sleep 3
++ peer chaincode query -C mychannel -n basic -c '{"Args":["GetAllAssets"]}'
+[{"AppraisedValue":300,"Color":"blue","ID":"asset1","Owner":"Tomoko","Size":5,"docType":"asset"},{"AppraisedValue":400,"Color":"red","ID":"asset2","Owner":"Brad","Size":5,"docType":"asset"},{"AppraisedValue":500,"Color":"green","ID":"asset3","Owner":"Jin Soo","Size":10,"docType":"asset"},{"AppraisedValue":600,"Color":"yellow","ID":"asset4","Owner":"Max","Size":10,"docType":"asset"},{"AppraisedValue":700,"Color":"black","ID":"asset5","Owner":"Adriana","Size":15,"docType":"asset"},{"AppraisedValue":800,"Color":"white","ID":"asset6","Owner":"Michel","Size":15,"docType":"asset"}]
++ peer chaincode query -C mychannel -n basic -c '{"Args":["ReadAsset","asset5"]}'
+{"AppraisedValue":700,"Color":"black","ID":"asset5","Owner":"Adriana","Size":15,"docType":"asset"}
++ peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n basic --peerAddresses localhost:7051 --tlsRootCertFiles /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt --peerAddresses localhost:9051 --tlsRootCertFiles /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt -c '{"function":"CreateAsset","Args":["asset7","green","12","Yash","950"]}'
+2026-10-13 18:21:36.863 IST 0001 INFO [chaincodeCmd] chaincodeInvokeOrQuery -> Chaincode invoke successful. result: status:200 payload:"{\"ID\":\"asset7\",\"Color\":\"green\",\"Size\":12,\"Owner\":\"Yash\",\"AppraisedValue\":950}" 
++ sleep 3
++ peer chaincode query -C mychannel -n basic -c '{"Args":["ReadAsset","asset7"]}'
+{"AppraisedValue":950,"Color":"green","ID":"asset7","Owner":"Yash","Size":12}
++ peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n basic --peerAddresses localhost:7051 --tlsRootCertFiles /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt --peerAddresses localhost:9051 --tlsRootCertFiles /Users/anonjr/Documents/College/BC/Experiment_10_Output/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt -c '{"function":"TransferAsset","Args":["asset7","Tomoko"]}'
+2026-10-13 18:21:40.037 IST 0001 INFO [chaincodeCmd] chaincodeInvokeOrQuery -> Chaincode invoke successful. result: status:200 payload:"Yash" 
++ sleep 3
++ peer chaincode query -C mychannel -n basic -c '{"Args":["ReadAsset","asset7"]}'
+{"AppraisedValue":950,"Color":"green","ID":"asset7","Owner":"Tomoko","Size":12}
++ peer chaincode query -C mychannel -n basic -c '{"Args":["AssetExists","asset99"]}'
+false
++ docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}'
+NAMES                                                                                                   IMAGE                                                                                                                                                                    STATUS
+dev-peer0.org1.example.com-basic_1.0-1d4d445573112813889f87c307bc2b5fbe664c87b24c035bee15cbcc7f59b629   dev-peer0.org1.example.com-basic_1.0-1d4d445573112813889f87c307bc2b5fbe664c87b24c035bee15cbcc7f59b629-d3cf9b1f4b9747cc8433ac0e74bfaeade1cf0b97f5c1163835f604aa885d60dc   Up 15 seconds
+dev-peer0.org2.example.com-basic_1.0-1d4d445573112813889f87c307bc2b5fbe664c87b24c035bee15cbcc7f59b629   dev-peer0.org2.example.com-basic_1.0-1d4d445573112813889f87c307bc2b5fbe664c87b24c035bee15cbcc7f59b629-c68f8ecc2a0ff0cc1497615f5e33a8bfa908e0fd3555f864cfa1398b52d341cb   Up 15 seconds
+peer0.org1.example.com                                                                                  hyperledger/fabric-peer:latest                                                                                                                                           Up About a minute
+orderer.example.com                                                                                     hyperledger/fabric-orderer:latest                                                                                                                                        Up About a minute
+peer0.org2.example.com                                                                                  hyperledger/fabric-peer:latest                                                                                                                                           Up About a minute
+api                                                                                                     ghcr.io/devfolioco/devfolio-api:latest                                                                                                                                   Up 2 seconds
+devfolio_backend-postgres-1                                                                             ghcr.io/devfolioco/postgres16:local                                                                                                                                      Up 32 hours (healthy)
+redis                                                                                                   redis:alpine                                                                                                                                                             Up 32 hours (healthy)
+devfolio_backend-graphql-engine-public-1                                                                hasura/graphql-engine:v2.6.1                                                                                                                                             Up 32 hours
+devfolio_backend-graphql-engine-1                                                                       hasura/graphql-engine:v2.20.1                                                                                                                                            Up 32 hours (healthy)
+devfolio_backend-notification-worker-1                                                                  ghcr.io/devfolioco/notification-worker:latest                                                                                                                            Up 32 hours (unhealthy)
++ ./network.sh down
+Using docker and docker-compose
+Stopping network
+ Container peer0.org2.example.com Stopping 
+ Container peer0.org1.example.com Stopping 
+ Container orderer.example.com Stopping 
+ Container orderer.example.com Stopped 
+ Container orderer.example.com Removing 
+ Container orderer.example.com Removed 
+ Container peer0.org2.example.com Stopped 
+ Container peer0.org2.example.com Removing 
+ Container peer0.org2.example.com Removed 
+ Container peer0.org1.example.com Stopped 
+ Container peer0.org1.example.com Removing 
+ Container peer0.org1.example.com Removed 
+ Volume compose_peer0.org1.example.com Removing 
+ Volume compose_peer0.org2.example.com Removing 
+ Network fabric_test Removing 
+ Volume compose_peer0.org2.example.com Removed 
+ Volume compose_orderer.example.com Removing 
+ Volume compose_peer0.org1.example.com Removed 
+ Volume compose_orderer.example.com Removed 
+ Network fabric_test Removed 
+Error response from daemon: get docker_orderer.example.com: no such volume
+Error response from daemon: get docker_peer0.org1.example.com: no such volume
+Error response from daemon: get docker_peer0.org2.example.com: no such volume
+Removing remaining containers
+Removing generated chaincode docker images
+Untagged: dev-peer0.org2.example.com-basic_1.0-1d4d445573112813889f87c307bc2b5fbe664c87b24c035bee15cbcc7f59b629-c68f8ecc2a0ff0cc1497615f5e33a8bfa908e0fd3555f864cfa1398b52d341cb:latest
+Deleted: sha256:7c252ec4beb1aa7e2970ef7b8289e3526dda4f14899fa99ecf407e58ee55caaf
+Untagged: dev-peer0.org1.example.com-basic_1.0-1d4d445573112813889f87c307bc2b5fbe664c87b24c035bee15cbcc7f59b629-d3cf9b1f4b9747cc8433ac0e74bfaeade1cf0b97f5c1163835f604aa885d60dc:latest
+Deleted: sha256:3b78ab72d671dfc8301b40007e895f68ff3196825ca2751d227cf8eeee0d7787
