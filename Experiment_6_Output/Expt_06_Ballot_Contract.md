@@ -12,12 +12,6 @@ To understand and deploy the `Ballot` voting smart contract (the Remix IDE sampl
 
 **Change made for this experiment:** the original sample stores each proposal name as `bytes32`, so deploying it in Remix needs every name converted to a hex string first (hence the web3-type-converter link in the manual). Here `Proposal.name` and the constructor argument are plain `string`, so names such as `"Proposal A: Library Upgrade"` are passed in as-is.
 
-**Viva topics**
-
-1. **Relevance of `require` statements.** `require(condition, "message")` is a guard: if the condition is false, execution stops, every state change made in that transaction is rolled back, and the message is returned to the caller. In `Ballot` it enforces who may act (`msg.sender == chairperson`, `weight != 0`) and when (`!voted`), so an invalid call can never corrupt the vote counts.
-2. **`mapping`, `storage` and `memory`.** A `mapping(address => Voter)` is a hash-table-like key-value store; it has no length and cannot be iterated, but lookups are cheap. `storage` is the contract's permanent on-chain state (writes cost gas); a `storage` local such as `Voter storage sender = voters[msg.sender]` is a *reference* to that state, so edits persist. `memory` is temporary, per-call data that is discarded when the function returns, and is cheaper (e.g. the `string[] memory proposalNames` constructor argument).
-3. **Why `bytes32` instead of `string`?** `bytes32` is fixed-size, fits in one storage slot and is cheap to store and compare, but limits names to 32 bytes and needs off-chain conversion for readability. `string` is dynamically sized, human-readable and unlimited in length, but costs more gas and cannot be compared with `==` directly. For a small ballot, readability outweighs the extra gas, which is why this experiment uses `string`.
-
 **Tools used:** Remix IDE (web, v2.6.8), Solidity compiler 0.8.34 (the contract declares `pragma solidity ^0.8.24`), the in-browser *Remix VM (Osaka)* test blockchain with its pre-funded accounts, and a short JavaScript script run in Remix's own terminal with the built-in ethers.js v6 runner to repeat the whole voting scenario.
 
 **Wallet integration:** the MetaMask screenshots use Remix's *Browser Extension* environment (Injected Provider) with MetaMask 13.53 connected to a local Hardhat node (chain ID 31337, which Remix labels "GoChain Testnet"), with the compiler EVM version set to Cancun because that node does not support Remix's default Osaka target. The chain is local, not a public testnet, so no faucet funds were used.
