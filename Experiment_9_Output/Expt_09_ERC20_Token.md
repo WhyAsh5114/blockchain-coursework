@@ -26,7 +26,9 @@ A **token** is a smart contract that keeps a ledger of balances (`mapping(addres
 - **Burnable** — `burn(amount)` lets a holder destroy their own tokens, permanently reducing total supply.
 - **Pausable** — the owner can `pause()` to halt every transfer (an emergency stop) and `unpause()` to resume.
 
-**Tools used:** Remix IDE (web, v2.6.6), Solidity compiler 0.8.34 (the contract declares `pragma solidity ^0.8.24`), OpenZeppelin Contracts 5.x (imported by Remix straight from npm through the `@openzeppelin/contracts/...` import paths), the in-browser *Remix VM (Osaka)* test blockchain, and a JavaScript script run from Remix's terminal with the built-in ethers.js v6 runner. The token was deployed to the Remix VM, not to a public testnet.
+**Tools used:** Remix IDE (web, v2.6.8), Solidity compiler 0.8.34 (the contract declares `pragma solidity ^0.8.24`), OpenZeppelin Contracts 5.x (imported by Remix straight from npm through the `@openzeppelin/contracts/...` import paths), the in-browser *Remix VM (Osaka)* test blockchain, and a JavaScript script run from Remix's terminal with the built-in ethers.js v6 runner. The token was deployed to the Remix VM, not to a public testnet.
+
+**Wallet integration:** the MetaMask screenshots use Remix's *Browser Extension* environment (Injected Provider) with MetaMask 13.53 connected to a local Hardhat node (chain ID 31337, which Remix labels "GoChain Testnet"), with the compiler EVM version set to Cancun because that node does not support Remix's default Osaka target. The chain is local, not a public testnet, so no faucet funds were used.
 
 ## Output
 
@@ -41,6 +43,17 @@ A **token** is a smart contract that keeps a ledger of balances (`mapping(addres
 
 ![Remix terminal: burn, pause, unpause and final balances](screenshots/exp9_04_burn_pause_final.png)
 *Bob's `burn(100)` lowers total supply to 1400. While the contract is paused, Alice's transfer reverts with `EnforcedPause()`, and after `unpause()` transfers work again. The final balances (900 + 70 + 430) sum to the total supply of 1400.*
+
+### Deployment and transfer through MetaMask
+
+![MetaMask confirmation for deploying VESToken from Remix](screenshots/exp9_mm_01_deploy_confirm.png)
+*Remix requests deployment of `VESToken` with an initial supply of 1000. MetaMask shows "Deploy a contract" from app.remix.live on Localhost 8545, with the network fee and the Confirm button.*
+
+![MetaMask transaction request for a VESToken transfer](screenshots/exp9_mm_02_transfer_confirm.png)
+*Calling `transfer(to, 100e18)` from Remix produces a MetaMask confirmation to send 100 tokens (shown as "Unknown" because MetaMask does not know this local token) from Imported Account 1 to Imported Account 2, interacting with the `VESToken` contract.*
+
+![Remix: VESToken deployed, transfer mined, and the recipient's balance](screenshots/exp9_mm_03_remix_deployed_and_transfer.png)
+*The Remix terminal logs the constructor (block 14) and the `transfer` (block 15), both successful and sent from the MetaMask account. Calling `balanceOf` on the recipient returns 100000000000000000000, i.e. 100 VEST at 18 decimals.*
 
 ## Conclusion
 

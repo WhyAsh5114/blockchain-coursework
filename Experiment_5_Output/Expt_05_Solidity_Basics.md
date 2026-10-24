@@ -18,7 +18,9 @@ Remix IDE's "Solidity Basics" LearnETH course walks a learner through Solidity's
 - **Control structures** — `classify()` uses an if/else-if/else chain to grade a student's marks, `averageMarks()` uses a `for` loop to sum an array, and `isEven()` uses a ternary expression.
 - **Function visibility** — `view`, `pure`, `external`, `public`, `internal`, and `private` are all represented; a `private` counter (`secretCounter`) has no public getter and is only reachable indirectly through a `public` wrapper function (`bumpCounter`), demonstrating that Solidity's `private` keeps a variable's value out of any public getter while still leaving it readable off-chain via storage slots — a distinction the LearnETH course specifically covers.
 
-**Tools used:** Remix IDE (web, v2.6.6), Solidity compiler 0.8.34 (the contract declares `pragma solidity ^0.8.24`), the in-browser *Remix VM (Osaka)* test blockchain with its pre-funded accounts, and a JavaScript script run from Remix's terminal with the built-in ethers.js v6 runner.
+**Tools used:** Remix IDE (web, v2.6.8), Solidity compiler 0.8.34 (the contract declares `pragma solidity ^0.8.24`), the in-browser *Remix VM (Osaka)* test blockchain with its pre-funded accounts, and a JavaScript script run from Remix's terminal with the built-in ethers.js v6 runner.
+
+**Wallet integration:** the MetaMask screenshots use Remix's *Browser Extension* environment (Injected Provider) with MetaMask 13.53 connected to a local Hardhat node (chain ID 31337, which Remix labels "GoChain Testnet"), with the compiler EVM version set to Cancun because that node does not support Remix's default Osaka target. The chain is local, not a public testnet, so no faucet funds were used.
 
 ## Output
 
@@ -33,6 +35,17 @@ Remix IDE's "Solidity Basics" LearnETH course walks a learner through Solidity's
 
 ![Remix terminal: pure functions and function visibility](screenshots/exp5_04_pure_and_visibility.png)
 *The `pure` functions `add()` and `isEven()` return the expected values. Three transactions to `bumpCounter()` advance the `private` `secretCounter` that has no public getter, showing a private variable reachable only through its public wrapper.*
+
+### Deployment and transaction through MetaMask
+
+![MetaMask confirmation for deploying SolidityBasics from Remix](screenshots/exp5_mm_01_deploy_confirm.png)
+*Remix requests deployment of `SolidityBasics` with the constructor greeting "Hello MetaMask". MetaMask shows "Deploy a contract" from app.remix.live on Localhost 8545, signing with Imported Account 2, with the network fee and Confirm button visible.*
+
+![MetaMask transaction request to call bumpCounter](screenshots/exp5_mm_02_call_confirm.png)
+*Calling `bumpCounter()` from Remix produces a MetaMask "Transaction request" naming the contract being interacted with (0x84641...318bC) and the signing account.*
+
+![Remix: SolidityBasics deployed and bumpCounter() mined](screenshots/exp5_mm_03_remix_deployed_and_call.png)
+*After approval, the deployed `SolidityBasics` instance is listed under Deployed Contracts with all of its functions, and the terminal logs the `bumpCounter()` transaction mined in block 7 from the MetaMask account.*
 
 ## Conclusion
 

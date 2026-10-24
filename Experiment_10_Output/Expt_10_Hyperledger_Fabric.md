@@ -22,95 +22,34 @@ Fabric transactions follow *execute-order-validate*: a client sends a proposal t
 
 ## Output
 
-**1. Verify the Fabric binaries (manual step 6)**
+![Terminal: peer version](screenshots/exp10_01_peer_version.png)
+*The Fabric CLI is on the `PATH` with `FABRIC_CFG_PATH` set (manual step 6); `peer version` reports v2.5.16 on darwin/arm64.*
 
-```
-$ peer version
-peer:
- Version: v2.5.16
- Commit SHA: f871cf9
- Go version: go1.26.4
- OS/Arch: darwin/arm64
-```
-*The Fabric CLI is on the `PATH` with `FABRIC_CFG_PATH` set, and the Docker images for peer, orderer, CA, ccenv and baseos were pulled by `install-fabric.sh`.*
+![Terminal: tail of ./network.sh up createChannel](screenshots/exp10_02_network_up_tail.png)
+*Step 7: `./network.sh up createChannel` generates the certificates, starts the containers, creates `mychannel`, joins both peers and sets the anchor peers. The last lines of its output are shown: "Anchor peer set for org 'Org2MSP'" and "Channel 'mychannel' joined".*
 
-**2. Start the network and create the channel (step 7)**
+![Terminal: Fabric containers running](screenshots/exp10_03_containers_running.png)
+*`docker ps` shows the two peers (`peer0.org1`, `peer0.org2`) and the orderer running.*
 
-```
-$ ./network.sh up createChannel
- Container peer0.org1.example.com Started
- Container orderer.example.com Started
- Container peer0.org2.example.com Started
-Anchor peer set for org 'Org1MSP' on channel 'mychannel'
-Anchor peer set for org 'Org2MSP' on channel 'mychannel'
-Channel 'mychannel' joined
-```
-*Two peers and an orderer start as Docker containers and both organizations join `mychannel` and set their anchor peers.*
+![Terminal: tail of ./network.sh deployCC](screenshots/exp10_04_deploy_chaincode_tail.png)
+*Step 8: `./network.sh deployCC` packages, installs, approves and commits the `basic` chaincode. Both organizations show `true` in the commit-readiness check, and "Committed chaincode definition for chaincode 'basic' on channel 'mychannel'" confirms Version 1.0, Sequence 1, Approvals [Org1MSP: true, Org2MSP: true].*
 
-**3. Deploy the chaincode (step 8)**
+![Terminal: environment variables selecting the Org1 admin identity](screenshots/exp10_05_peer_env.png)
+*The `CORE_PEER_*` variables make the `peer` CLI act as the Org1 admin against `peer0.org1` with TLS enabled.*
 
-```
-$ ./network.sh deployCC -ccn basic -ccp ../asset-transfer-basic/chaincode-javascript -ccl javascript
-Chaincode definition approved on peer0.org1 on channel 'mychannel'
-Chaincode definition approved on peer0.org2 on channel 'mychannel'
-Chaincode definition committed on channel 'mychannel'
-Committed chaincode definition for chaincode 'basic' on channel 'mychannel':
-Version: 1.0, Sequence: 1, Endorsement Plugin: escc, Validation Plugin: vscc, Approvals: [Org1MSP: true, Org2MSP: true]
-```
-*The chaincode is packaged, installed on both peers, approved by both organizations, and committed to the channel.*
+![Terminal: InitLedger invoke, GetAllAssets and ReadAsset](screenshots/exp10_06_initledger_query.png)
+*Steps 10 to 12: the `InitLedger` invoke (naming the orderer and the endorsing peers of both organizations) returns "Chaincode invoke successful. result: status:200". `GetAllAssets` lists the six sample assets and `ReadAsset` returns `asset5`.*
 
-**4. Initialize the ledger and query (steps 10 to 12)**
+![Terminal: creating asset7 owned by Yash](screenshots/exp10_07_create_asset.png)
+*Step 13: `CreateAsset` adds `asset7` (green, size 12, owner Yash, value 950), and a `ReadAsset` query confirms it is on the ledger.*
 
-```
-$ peer chaincode invoke ... -c '{"function":"InitLedger","Args":[]}'
-Chaincode invoke successful. result: status:200
+![Terminal: transferring asset7 to Tomoko](screenshots/exp10_08_transfer_asset.png)
+*Step 14: `TransferAsset` returns the previous owner ("Yash"). `ReadAsset` then shows the owner is Tomoko, and `AssetExists` for a non-existent ID returns `false`.*
 
-$ peer chaincode query -C mychannel -n basic -c '{"Args":["GetAllAssets"]}'
-[{"AppraisedValue":300,"Color":"blue","ID":"asset1","Owner":"Tomoko","Size":5,"docType":"asset"},
- {"AppraisedValue":400,"Color":"red","ID":"asset2","Owner":"Brad","Size":5,"docType":"asset"},
- {"AppraisedValue":500,"Color":"green","ID":"asset3","Owner":"Jin Soo","Size":10,"docType":"asset"}, ...]
+![Terminal: ./network.sh down](screenshots/exp10_09_network_down.png)
+*Step 15: before shutdown, `docker ps` lists the peers, the orderer and the two chaincode containers. `./network.sh down` removes them, along with the volumes and the generated chaincode images, and a final `docker ps` shows no Fabric containers left.*
 
-$ peer chaincode query -C mychannel -n basic -c '{"Args":["ReadAsset","asset5"]}'
-{"AppraisedValue":700,"Color":"black","ID":"asset5","Owner":"Adriana","Size":15,"docType":"asset"}
-```
-*`InitLedger` is a transaction that writes six sample assets; `GetAllAssets` (read-only) lists them and `ReadAsset` fetches `asset5` by ID.*
-
-**5. Create a new asset owned by Yash (step 13)**
-
-```
-$ peer chaincode invoke ... -c '{"function":"CreateAsset","Args":["asset7","green","12","Yash","950"]}'
-Chaincode invoke successful. result: status:200 payload:"{\"ID\":\"asset7\",\"Color\":\"green\",\"Size\":12,\"Owner\":\"Yash\",\"AppraisedValue\":950}"
-
-$ peer chaincode query -C mychannel -n basic -c '{"Args":["ReadAsset","asset7"]}'
-{"AppraisedValue":950,"Color":"green","ID":"asset7","Owner":"Yash","Size":12}
-```
-*A new asset, `asset7`, is created with owner Yash, and reading it back confirms the write was committed to the ledger.*
-
-**6. Transfer the asset (step 14)**
-
-```
-$ peer chaincode invoke ... -c '{"function":"TransferAsset","Args":["asset7","Tomoko"]}'
-Chaincode invoke successful. result: status:200 payload:"Yash"
-
-$ peer chaincode query -C mychannel -n basic -c '{"Args":["ReadAsset","asset7"]}'
-{"AppraisedValue":950,"Color":"green","ID":"asset7","Owner":"Tomoko","Size":12}
-
-$ peer chaincode query -C mychannel -n basic -c '{"Args":["AssetExists","asset99"]}'
-false
-```
-*`TransferAsset` returns the previous owner ("Yash") and the next read shows the owner is now Tomoko. `AssetExists` confirms a non-existent ID returns `false`.*
-
-**7. Stop the network (step 15)**
-
-```
-$ ./network.sh down
- Container orderer.example.com Removed
- Container peer0.org2.example.com Removed
- Container peer0.org1.example.com Removed
-```
-*All Fabric containers, volumes and generated chaincode images are removed.*
-
-*(The complete run log, including every command and its output, is saved as `fabric_run_clean.log`, produced by `run_fabric.sh`, both in this folder.)*
+*(The run log for an earlier pass of the same commands is saved as `fabric_run_clean.log`, produced by `run_fabric.sh`, both in this folder.)*
 
 ## Conclusion
 

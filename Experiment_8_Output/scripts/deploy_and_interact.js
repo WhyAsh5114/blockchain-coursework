@@ -4,7 +4,7 @@ const { ethers } = hre;
 
 async function main() {
   const [owner, alice, bob] = await ethers.getSigners();
-  console.log("=== Accounts (Hardhat local network, used as the 'wallet' accounts) ===");
+  console.log("=== Accounts (Ganache accounts #4, #5 and #6) ===");
   console.log("Owner:", owner.address);
   console.log("Alice:", alice.address);
   console.log("Bob  :", bob.address);

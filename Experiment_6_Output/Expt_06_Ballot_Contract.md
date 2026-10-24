@@ -18,7 +18,9 @@ To understand and deploy the `Ballot` voting smart contract (the Remix IDE sampl
 2. **`mapping`, `storage` and `memory`.** A `mapping(address => Voter)` is a hash-table-like key-value store; it has no length and cannot be iterated, but lookups are cheap. `storage` is the contract's permanent on-chain state (writes cost gas); a `storage` local such as `Voter storage sender = voters[msg.sender]` is a *reference* to that state, so edits persist. `memory` is temporary, per-call data that is discarded when the function returns, and is cheaper (e.g. the `string[] memory proposalNames` constructor argument).
 3. **Why `bytes32` instead of `string`?** `bytes32` is fixed-size, fits in one storage slot and is cheap to store and compare, but limits names to 32 bytes and needs off-chain conversion for readability. `string` is dynamically sized, human-readable and unlimited in length, but costs more gas and cannot be compared with `==` directly. For a small ballot, readability outweighs the extra gas, which is why this experiment uses `string`.
 
-**Tools used:** Remix IDE (web, v2.6.6), Solidity compiler 0.8.34 (the contract declares `pragma solidity ^0.8.24`), the in-browser *Remix VM (Osaka)* test blockchain with its pre-funded accounts, and a short JavaScript script run in Remix's own terminal with the built-in ethers.js v6 runner to repeat the whole voting scenario.
+**Tools used:** Remix IDE (web, v2.6.8), Solidity compiler 0.8.34 (the contract declares `pragma solidity ^0.8.24`), the in-browser *Remix VM (Osaka)* test blockchain with its pre-funded accounts, and a short JavaScript script run in Remix's own terminal with the built-in ethers.js v6 runner to repeat the whole voting scenario.
+
+**Wallet integration:** the MetaMask screenshots use Remix's *Browser Extension* environment (Injected Provider) with MetaMask 13.53 connected to a local Hardhat node (chain ID 31337, which Remix labels "GoChain Testnet"), with the compiler EVM version set to Cancun because that node does not support Remix's default Osaka target. The chain is local, not a public testnet, so no faucet funds were used.
 
 ## Output
 
@@ -33,6 +35,17 @@ To understand and deploy the `Ballot` voting smart contract (the Remix IDE sampl
 
 ![Remix terminal: winner name and the four failed require checks](screenshots/exp6_04_winner_and_reverts.png)
 *`winnerName()` returns "Proposal B: Sports Complex" as plain text. Four invalid calls (double vote, voting without the right, a non-chairperson granting the right, delegating after already voting) each revert with the contract's own `require` message, and proposal 2's vote count is still 0 afterwards.*
+
+### Deployment and transactions through MetaMask
+
+![MetaMask confirmation for deploying Ballot from Remix](screenshots/exp6_mm_01_deploy_confirm.png)
+*Remix requests deployment of `Ballot` with the three proposal names as a `string[]` constructor argument. MetaMask shows "Deploy a contract" from app.remix.live on Localhost 8545, with the network fee and the Confirm button.*
+
+![MetaMask transaction request for giveRightToVote](screenshots/exp6_mm_02_giveRight_confirm.png)
+*Calling `giveRightToVote(address)` from Remix produces a MetaMask "Transaction request" naming the Ballot contract (0x5FbDB...80aa3) as the one being interacted with.*
+
+![Remix: Ballot deployed through MetaMask, transactions mined and winnerName() result](screenshots/exp6_mm_03_remix_deployed_and_winner.png)
+*The Remix terminal logs the constructor (block 1), `giveRightToVote` (block 2) and `vote` (block 3) transactions, all successful and sent from the MetaMask account. Calling `winnerName()` returns "Proposal B: Sports Complex", the proposal the chairperson voted for.*
 
 ## Conclusion
 

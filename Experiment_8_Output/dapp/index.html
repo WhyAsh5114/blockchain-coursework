@@ -21,9 +21,8 @@
 <body>
 <header><strong>Donation Tracker DApp</strong><span>Wallet: <span id="status" class="badge off">not connected</span></span></header>
 <main>
- <div class="card"><h2>1. Wallet (injected EIP-1193 provider, like Metamask's window.ethereum)</h2>
+ <div class="card"><h2>1. Wallet (MetaMask, injected as window.ethereum)</h2>
   <div class="kv"><span>Network</span><span id="net">-</span>
-   <span>Account</span><span><select id="acct"></select></span>
    <span>Address</span><span id="addr" class="mono">-</span>
    <span>Balance</span><span id="bal">-</span></div>
   <p><button id="connect">Connect Wallet</button></p></div>
@@ -42,28 +41,25 @@
 </main>
 <script src="ethers.umd.min.js"></script>
 <script>
-// --- Local wallet: an EIP-1193 provider injected as window.ethereum -----------------
-// Behaves like Metamask's injected provider: the page never sees a private key,
-// it just calls request({method,params}) and the wallet signs / forwards to the node.
-const RPC = "http://127.0.0.1:8548";
-let selected = 0, accounts = [];
-async function rpc(method, params = []) {
-  const r = await fetch(RPC, {method: "POST", headers: {"content-type": "application/json"},
-    body: JSON.stringify({jsonrpc: "2.0", id: Date.now(), method, params})});
-  const j = await r.json(); if (j.error) { const e = new Error(j.error.message); e.data = j.error.data; throw e; } return j.result;
-}
-window.ethereum = {
-  isLocalWallet: true,
-  async request({method, params = []}) {
-    if (method === "eth_requestAccounts" || method === "eth_accounts") { accounts = await rpc("eth_accounts"); return [accounts[selected]]; }
-    return rpc(method, params);
-  },
-  on() {}, removeListener() {}
-};
-// -----------------------------------------------------------------------------------
+// window.ethereum is injected by the MetaMask extension (EIP-1193); the page never sees a private key.
+if (!window.ethereum) { document.addEventListener("DOMContentLoaded", () => { document.getElementById("log").textContent = "MetaMask not found. Install the extension and reload."; }); }
 const $ = id => document.getElementById(id);
+// Ganache puts the revert text under info.error.data.data.reason; fall back to ethers' own fields
+const why = e => (e.info && e.info.error && e.info.error.data && e.info.error.data.data && e.info.error.data.data.reason) || e.reason || e.shortMessage || e.message;
 const log = s => { $("log").textContent = (new Date().toLocaleTimeString() + "  " + s + "\n") + ($("log").textContent.startsWith("Waiting") ? "" : $("log").textContent); };
-let provider, signer, contract, dep;
+let provider, signer, contract, dep, connecting = false;
+const TARGET = {chainId: "0x1691", chainName: "Ganache", rpcUrls: ["http://127.0.0.1:7545"],
+                nativeCurrency: {name: "Ether", symbol: "ETH", decimals: 18}};
+// Ask MetaMask to move to the network the contract lives on (adds it first if MetaMask does not know it)
+async function ensureNetwork() {
+  const cur = await window.ethereum.request({method: "eth_chainId"});
+  if (cur === TARGET.chainId) return;
+  try { await window.ethereum.request({method: "wallet_switchEthereumChain", params: [{chainId: TARGET.chainId}]}); }
+  catch (e) {
+    if (e.code === 4902) await window.ethereum.request({method: "wallet_addEthereumChain", params: [TARGET]});
+    else throw e;
+  }
+}
 
 async function refresh() {
   const me = await signer.getAddress();
@@ -79,33 +75,39 @@ async function refresh() {
   }
 }
 async function connect() {
+  connecting = true;
   dep = await (await fetch("deployment.json")).json();
+  await window.ethereum.request({method: "eth_requestAccounts"});
+  await ensureNetwork();
   provider = new ethers.BrowserProvider(window.ethereum);
-  await provider.send("eth_requestAccounts", []);
   signer = await provider.getSigner();
   const net = await provider.getNetwork();
-  $("net").textContent = "Hardhat Local (chainId " + net.chainId + ")";
+  $("net").textContent = "Ganache (chainId " + net.chainId + ")";
   $("status").textContent = "connected"; $("status").className = "badge";
-  accounts = await rpc("eth_accounts");
-  $("acct").innerHTML = accounts.slice(0, 5).map((a, i) => `<option value="${i}" ${i===selected?"selected":""}>Account #${i} (${a.slice(0,8)}...)</option>`).join("");
   contract = new ethers.Contract(dep.address, dep.abi, signer);
   $("caddr").textContent = dep.address;
   log("Wallet connected: " + await signer.getAddress());
   await refresh();
+  connecting = false;
 }
-$("connect").onclick = () => connect().catch(e => log("ERROR " + e.message));
-$("acct").onchange = async e => { selected = Number(e.target.value); await connect(); };
+$("connect").onclick = () => connect().catch(e => { connecting = false; log("ERROR " + (e.shortMessage || e.message)); });
+if (window.ethereum) {
+  // re-read everything when the user switches account or network inside MetaMask
+  const again = () => { if (contract && !connecting) connect().catch(e => { connecting = false; log("ERROR " + (e.shortMessage || e.message)); }); };
+  window.ethereum.on("accountsChanged", again);
+  window.ethereum.on("chainChanged", again);
+}
 $("donate").onclick = async () => {
   try {
     const tx = await contract.donate($("msg").value, {value: ethers.parseEther($("amount").value)});
     log("donate() sent, tx " + tx.hash); const rc = await tx.wait();
     log("Mined in block " + rc.blockNumber + ", gas used " + rc.gasUsed); await refresh();
-  } catch (e) { log("donate() failed: " + (e.reason || e.shortMessage || e.message)); }
+  } catch (e) { log("donate() failed: " + why(e)); }
 };
 $("withdraw").onclick = async () => {
   try {
     const tx = await contract.withdraw(); log("withdraw() sent, tx " + tx.hash); const rc = await tx.wait();
     log("Withdrawn in block " + rc.blockNumber); await refresh();
-  } catch (e) { log("withdraw() failed: " + (e.reason || e.shortMessage || e.message)); }
+  } catch (e) { log("withdraw() failed: " + why(e)); }
 };
 </script></body></html>

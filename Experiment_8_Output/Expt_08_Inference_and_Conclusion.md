@@ -2,8 +2,8 @@
 
 ## Inference
 
-The DApp read the donation contract's state through its wallet connection and refreshed the displayed values after transactions. The total increased from 2.25 ETH to 4.5 ETH after a donation; a non-owner's withdrawal reverted, while the owner completed the withdrawal successfully.
+The DApp read the donation contract's state through its MetaMask connection and refreshed the displayed values after transactions. The total increased from 2.25 ETH to 4.5 ETH after a donation approved in MetaMask; a non-owner's withdrawal reverted, while the owner completed the withdrawal successfully.
 
 ## Conclusion
 
-The local wallet provider and DApp successfully interacted with the DonationTracker contract on Hardhat. The experiment demonstrated wallet-signed donations, live contract-state updates, and owner-only withdrawal; the provider simulated MetaMask's interface for this run.
+MetaMask and the DApp successfully interacted with the DonationTracker contract on a local Ganache chain. The experiment demonstrated wallet-approved donations, live contract-state updates that follow account changes in the wallet, and owner-only withdrawal.
