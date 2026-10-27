@@ -6,6 +6,16 @@
 
 To implement a Hyperledger Fabric network, deploy chaincode, and perform asset creation, querying, and transfer operations.
 
+## Tasks Performed
+
+1. Prepared the environment (Docker, Git, Node.js, npm, `jq`, `curl`) and cloned `hyperledger/fabric-samples`.
+2. Installed the Fabric binaries and Docker images with `install-fabric.sh`, and set `PATH` and `FABRIC_CFG_PATH` (`peer version`).
+3. Started the test network and created the channel: `./network.sh up createChannel`.
+4. Deployed the `asset-transfer-basic` JavaScript chaincode: `./network.sh deployCC`.
+5. Set the Org1 peer environment, initialised the ledger (`InitLedger`) and queried all assets and `asset5`.
+6. Created a new asset (`CreateAsset`) and transferred it (`TransferAsset`), checking the ledger after each step.
+7. Stopped the network with `./network.sh down`.
+
 ## Theory
 
 **Hyperledger Fabric** is a permissioned, enterprise blockchain framework: every participant has an identity issued by a certificate authority and belongs to an organization, unlike public chains where anyone can join. Its main components are:
@@ -19,6 +29,49 @@ To implement a Hyperledger Fabric network, deploy chaincode, and perform asset c
 Fabric transactions follow *execute-order-validate*: a client sends a proposal to endorsing peers, which simulate it and sign the result; the client submits the endorsed transaction to the orderer, which puts it in a block; peers then validate and commit it. This is why `peer chaincode invoke` must name the orderer and the endorsing peers of **both** organizations (the chaincode's endorsement policy), whereas `peer chaincode query` is read-only and only talks to the local peer.
 
 **Tools used:** Hyperledger Fabric 2.5.16 binaries and Docker images, `fabric-samples` `test-network` (2 peer organizations, 1 orderer, channel `mychannel`), the `asset-transfer-basic` JavaScript chaincode, Docker (OrbStack) on macOS. The manual's Windows Subsystem for Linux + Ubuntu environment was not used; the same commands were run natively on macOS through `run_fabric.sh`, with the elided `peer chaincode invoke ...` flags written out in full.
+
+## Program
+
+Commands from the manual (steps 6 to 15), run in one script, `run_fabric.sh`:
+
+::: code2
+```bash
+#!/bin/bash
+# Experiment 10: Hyperledger Fabric test-network + asset-transfer-basic chaincode (steps 6-15 of the manual)
+set -x
+export PATH=$PWD/fabric-samples/bin:$PATH
+export FABRIC_CFG_PATH=$PWD/fabric-samples/config
+peer version
+cd fabric-samples/test-network
+./network.sh down
+./network.sh up createChannel
+./network.sh deployCC -ccn basic -ccp ../asset-transfer-basic/chaincode-javascript -ccl javascript
+
+export CORE_PEER_TLS_ENABLED=true
+export CORE_PEER_LOCALMSPID=Org1MSP
+export CORE_PEER_TLS_ROOTCERT_FILE=$PWD/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+export CORE_PEER_MSPCONFIGPATH=$PWD/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+export CORE_PEER_ADDRESS=localhost:7051
+ORDERER_CA=$PWD/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+ORG2_TLS=$PWD/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt
+INVOKE=(peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile "$ORDERER_CA" -C mychannel -n basic
+  --peerAddresses localhost:7051 --tlsRootCertFiles "$CORE_PEER_TLS_ROOTCERT_FILE" --peerAddresses localhost:9051 --tlsRootCertFiles "$ORG2_TLS")
+
+"${INVOKE[@]}" -c '{"function":"InitLedger","Args":[]}'
+sleep 3
+peer chaincode query -C mychannel -n basic -c '{"Args":["GetAllAssets"]}'
+peer chaincode query -C mychannel -n basic -c '{"Args":["ReadAsset","asset5"]}'
+"${INVOKE[@]}" -c '{"function":"CreateAsset","Args":["asset7","green","12","Yash","950"]}'
+sleep 3
+peer chaincode query -C mychannel -n basic -c '{"Args":["ReadAsset","asset7"]}'
+"${INVOKE[@]}" -c '{"function":"TransferAsset","Args":["asset7","Tomoko"]}'
+sleep 3
+peer chaincode query -C mychannel -n basic -c '{"Args":["ReadAsset","asset7"]}'
+peer chaincode query -C mychannel -n basic -c '{"Args":["AssetExists","asset99"]}'
+docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}'
+./network.sh down
+```
+:::
 
 ## Output
 
