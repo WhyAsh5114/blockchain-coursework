@@ -1,0 +1,35 @@
+Network : sepolia 11155111n
+Owner   : 0x51944Dd4b0862390b601B3d221978dC8B8f561a9 3.668990075471971624 ETH
+Donor   : 0x9bC6F8fc5D3956d50964Fafe5D5C20F544EFcE9c 0.0 ETH
+fund_donor                   0xc47584df7592e7c866840bb4c466ba8ee8aa2f1c74e357d27491d0ac3a55c893  block 12005570
+deploy_A                     0xd0E39cAeC616a472F33C38752A89B3B735A7D58B  (goal 0.003 ETH, 150s)  tx 0x2254f7808f8fd771275f66a4f813b2f2cb079d935efcddfd4553468b001e1b7f
+deploy_B                     0xbe5A4c2406ABca88A53271cbB063FaAD7e65b99C  (goal 1 ETH, 120s)  tx 0x79b2990aabb00777ff8d197cb9e8910da64dbe43e40ca4afd723b743f156ded8
+A_donor_contribute           0x553dc5fd81498aa21705c98ea47008622cdf163f0826889d27407e742294f39c  block 12005575
+A_owner_contribute           0x3391552fd54157030f699d7d81821cc0009e0b169a44ddcaebb628932546e4dc  block 12005577
+B_donor_contribute           0x6a6d9b91267562e24f57f7bbb61410b574ec214ecb267de11f86b47901179b50  block 12005578
+A totalRaised: 0.004 goalReached: true
+B totalRaised: 0.001 goalReached: false
+withdraw before deadline -> Campaign still active
+waiting 87s ...
+B withdraw (goal missed) -> Funding goal not reached
+B_donor_refund               0x16c5750efd5666997a88898af30b5580ac7c68085d08da5d5a0586e7f1f758fa  block 12005587
+B donor contribution after refund: 0.0
+A_owner_withdraw             0x5a549b9604f489a259fe517618c98ca68738b9b8a6ca90f29860484f9f20f744  block 12005588
+A contract balance after withdraw: 0.0
+A withdrawn flag: true
+{
+  "fund_donor": "0xc47584df7592e7c866840bb4c466ba8ee8aa2f1c74e357d27491d0ac3a55c893",
+  "deploy_A": "0x2254f7808f8fd771275f66a4f813b2f2cb079d935efcddfd4553468b001e1b7f",
+  "deploy_A_address": "0xd0E39cAeC616a472F33C38752A89B3B735A7D58B",
+  "deploy_B": "0x79b2990aabb00777ff8d197cb9e8910da64dbe43e40ca4afd723b743f156ded8",
+  "deploy_B_address": "0xbe5A4c2406ABca88A53271cbB063FaAD7e65b99C",
+  "deadlines": {
+    "A": 1793109618,
+    "B": 1793109612
+  },
+  "A_donor_contribute": "0x553dc5fd81498aa21705c98ea47008622cdf163f0826889d27407e742294f39c",
+  "A_owner_contribute": "0x3391552fd54157030f699d7d81821cc0009e0b169a44ddcaebb628932546e4dc",
+  "B_donor_contribute": "0x6a6d9b91267562e24f57f7bbb61410b574ec214ecb267de11f86b47901179b50",
+  "B_donor_refund": "0x16c5750efd5666997a88898af30b5580ac7c68085d08da5d5a0586e7f1f758fa",
+  "A_owner_withdraw": "0x5a549b9604f489a259fe517618c98ca68738b9b8a6ca90f29860484f9f20f744"
+}

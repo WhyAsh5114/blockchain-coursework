@@ -4,81 +4,255 @@
 
 ## Aim
 
-To develop a blockchain-powered application using the Solidity programming language in the Remix IDE, and deploy a Crowdfunding smart contract mini-project: a campaign owner sets a funding goal and deadline, contributors pledge ETH, the owner can withdraw only if the goal is reached, and contributors can reclaim their funds if it is not.
+To develop a blockchain-powered application using the Solidity programming language in the Remix IDE with a MetaMask wallet, and deploy a Crowdfunding smart contract mini-project on the **Sepolia public testnet**: a campaign owner sets a funding goal and deadline, contributors pledge ETH, the owner can withdraw only if the goal is reached, and contributors can reclaim their funds if it is not.
+
+## Tasks Performed
+
+1. **Set up MetaMask:** installed the MetaMask extension, created and imported accounts, and funded the owner account with Sepolia test ETH (3.67 ETH from a faucet).
+2. **Connected the network to Remix:** in Remix's *Deploy & Run Transactions* panel the environment was set to *Browser Extension / MetaMask*, so Remix sends every transaction to the wallet for approval (shown on a local Ganache chain, which uses the identical flow).
+3. **Created the mini-project contract:** `Crowdfunding.sol` (goal, deadline, `contribute`, `withdraw`, `refund`) and compiled it with Solidity 0.8.34.
+4. **Deployed to Sepolia:** two campaigns, A (goal 0.003 ETH, 150 s) and B (goal 1 ETH, 120 s), through the owner account.
+5. **Interacted with the contracts on Sepolia:** transferred 0.02 ETH between accounts, contributed from a second "donor" account, waited for the deadlines, then withdrew the funds of A (goal reached) and refunded the donor of B (goal missed). Negative tests were run for withdrawing too early and withdrawing with the goal missed.
+6. **Checked the transactions on a block explorer:** the contract pages, internal transactions and deploy transaction on the Sepolia explorer (Blockscout).
 
 ## Theory
 
-Remix IDE lets a developer compile a Solidity contract in the browser and deploy it to an execution environment of choice: an injected wallet such as MetaMask connected to a local blockchain or public testnet, or the *Remix VM*, an in-browser test blockchain with pre-funded accounts. This experiment documents the MetaMask connection and the whole crowdfunding flow driven through MetaMask on a local **Ganache** chain, plus the complete crowdfunding lifecycle tests on the **Remix VM**. In the lifecycle tests, a short script run from Remix's own terminal (using the built-in ethers.js library) plays the role of several wallet users by signing transactions from different Remix VM accounts.
+**MetaMask** is a browser-extension wallet that holds the private keys of Ethereum accounts, shows each transaction for approval and signs it. A **testnet** such as Sepolia is a public blockchain that works exactly like Ethereum but whose ETH is free (from faucets) and has no value, so contracts can be tested safely with real network behaviour: real block times, gas and a public explorer. To connect MetaMask to Remix, install MetaMask, pick the Sepolia network, fund the account from a faucet, set Remix's environment to *Browser Extension / MetaMask*, approve the connection request, then deploy and call functions; each one opens a MetaMask confirmation.
 
-With MetaMask, Remix requests access to selected wallet accounts and uses the **Browser Extension / MetaMask** environment to submit transaction requests. MetaMask shows the account, network, amount and estimated fee for approval, and only a confirmed request is signed and sent to the chain. The MetaMask screenshots show a funded account, a 1 ETH transfer between two accounts, the contract-deployment request, a 1.5 ETH `contribute()` request, and the owner's `withdraw()`.
+The contract models the funding lifecycle of a crowdfunding dApp. The **constructor** records the `goal` (wei) and `deadline = block.timestamp + duration`. **`contribute()`** is `payable` and adds `msg.value` to the caller's entry in `contributions` and to `totalRaised`. **`withdraw()`** is `onlyOwner` and only works after the deadline when `totalRaised >= goal`; it sends the whole balance to the owner once. **`refund()`** works after the deadline only when the goal was missed; the contributor's balance is zeroed before the ETH is sent (checks-effects-interactions).
 
-The mini-project contract, `Crowdfunding.sol`, models the funding lifecycle of a typical crowdfunding dApp:
+**Tools used:** Remix IDE 2.6.8, Solidity 0.8.34, MetaMask 13.53, ethers.js v6 and Hardhat 2.x (for compiling the artifact), and the Sepolia explorer at eth-sepolia.blockscout.com (Etherscan blocks automated browsers, and the explorer pages carry the same data).
 
-- The **constructor** takes a `goal` (in wei) and a `durationSeconds`, and records `deadline = block.timestamp + durationSeconds`.
-- **`contribute()`** is `payable`; anyone can call it before the deadline, and each call adds `msg.value` to both a per-address `contributions` mapping and the running `totalRaised`.
-- **`withdraw()`**, guarded by an `onlyOwner` modifier, only succeeds once the deadline has passed *and* `totalRaised >= goal`; it forwards the full contract balance to the owner and sets a `withdrawn` flag so it cannot be called twice.
-- **`refund()`** is the mirror case: once the deadline has passed *without* the goal being met, each contributor can reclaim exactly what they put in; a contributor's balance is zeroed before the ETH transfer (checks-effects-interactions) to prevent re-entrancy, and a second call for the same address reverts with "No contribution to refund".
+**Note on how the Sepolia transactions were signed:** the MetaMask + Remix flow (connection, send, deploy and contribute confirmations) was captured live on a local Ganache chain, where it works exactly the same. The Sepolia transactions themselves were signed with the funded account's key from an ethers.js script (below), so that the two campaign deadlines could be run in parallel and the key never appears in any screenshot. All Sepolia transaction hashes in the log are public and can be opened on the explorer.
 
-Because the deadline check depends on `block.timestamp`, the script creates each campaign with a short duration (40 to 60 seconds) and genuinely waits for the deadline to pass before calling `withdraw()` or `refund()`. The Remix VM stamps each block with the real clock, so no special time-travel tools are needed.
+## Program
 
-**Tools used:** Remix IDE (web, v2.6.8), Solidity compiler 0.8.34 (the contract declares `pragma solidity ^0.8.24`), the in-browser *Remix VM (Osaka)* test blockchain with its pre-funded accounts, and a JavaScript script run from Remix's terminal with the built-in ethers.js v6 runner.
+`Crowdfunding.sol`:
 
-**Wallet integration:** MetaMask 13.53 connected to a local Ganache chain (`ganache --server.port 7545 --chain.chainId 5777 --wallet.deterministic`, RPC `http://127.0.0.1:7545`), with Ganache accounts imported by private key as "DApp Owner" and "Donor". Remix IDE v2.6.8 uses its Browser Extension / MetaMask environment, with the compiler EVM version set to Shanghai (the newest fork Ganache supports). The chain is local, not a public testnet, so no faucet funds were used.
+::: code2
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.24;
+
+/// @title Crowdfunding
+/// @notice A minimal crowdfunding dApp contract: a campaign owner sets a
+///         funding goal and deadline, contributors pledge ETH, the owner can
+///         withdraw only if the goal is met, and contributors can claim a
+///         refund only if the deadline passed without the goal being met.
+contract Crowdfunding {
+    address public owner;
+    uint256 public goal;
+    uint256 public deadline;
+    uint256 public totalRaised;
+    bool public withdrawn;
+
+    mapping(address => uint256) public contributions;
+
+    event Contributed(address indexed contributor, uint256 amount, uint256 totalRaised);
+    event Withdrawn(address indexed owner, uint256 amount);
+    event Refunded(address indexed contributor, uint256 amount);
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only the campaign owner can call this");
+        _;
+    }
+
+    constructor(uint256 _goal, uint256 _durationSeconds) {
+        require(_goal > 0, "Goal must be > 0");
+        owner = msg.sender;
+        goal = _goal;
+        deadline = block.timestamp + _durationSeconds;
+    }
+
+    function contribute() external payable {
+        require(block.timestamp < deadline, "Campaign has ended");
+        require(msg.value > 0, "Contribution must be > 0");
+
+        contributions[msg.sender] += msg.value;
+        totalRaised += msg.value;
+
+        emit Contributed(msg.sender, msg.value, totalRaised);
+    }
+
+    function withdraw() external onlyOwner {
+        require(block.timestamp >= deadline, "Campaign still active");
+        require(totalRaised >= goal, "Funding goal not reached");
+        require(!withdrawn, "Already withdrawn");
+
+        withdrawn = true;
+        uint256 amount = address(this).balance;
+        (bool sent, ) = owner.call{value: amount}("");
+        require(sent, "Transfer to owner failed");
+
+        emit Withdrawn(owner, amount);
+    }
+
+    function refund() external {
+        require(block.timestamp >= deadline, "Campaign still active");
+        require(totalRaised < goal, "Funding goal was reached, no refunds");
+
+        uint256 amount = contributions[msg.sender];
+        require(amount > 0, "No contribution to refund");
+
+        contributions[msg.sender] = 0;
+        (bool sent, ) = msg.sender.call{value: amount}("");
+        require(sent, "Refund transfer failed");
+
+        emit Refunded(msg.sender, amount);
+    }
+
+    function timeLeft() external view returns (uint256) {
+        if (block.timestamp >= deadline) return 0;
+        return deadline - block.timestamp;
+    }
+
+    function goalReached() external view returns (bool) {
+        return totalRaised >= goal;
+    }
+}
+```
+:::
+
+`scripts/sepolia_crowdfunding.js` (deploys and exercises both campaigns on Sepolia):
+
+::: code2
+```javascript
+// Run: node --env-file=../.env --env-file=<donor.env> scripts/sepolia_crowdfunding.js
+// SEPOLIA_PRIVATE_KEY = funded owner account, DONOR_PRIVATE_KEY = second account (contributor).
+const { ethers } = require("ethers");
+const artifact = require("../artifacts/contracts/Crowdfunding.sol/Crowdfunding.json");
+
+const RPC = "https://ethereum-sepolia-rpc.publicnode.com";
+const provider = new ethers.JsonRpcProvider(RPC);
+const owner = new ethers.Wallet(process.env.SEPOLIA_PRIVATE_KEY, provider);
+const donor = new ethers.Wallet(process.env.DONOR_PRIVATE_KEY, provider);
+const eth = (v) => ethers.formatEther(v);
+const sleep = (s) => new Promise((r) => setTimeout(r, s * 1000));
+const log = {};
+
+async function send(label, txPromise) {
+  const tx = await txPromise;
+  const rc = await tx.wait();
+  log[label] = rc.hash;
+  console.log(`${label.padEnd(28)} ${rc.hash}  block ${rc.blockNumber}`);
+  return rc;
+}
+
+async function deploy(label, goalEth, seconds) {
+  const f = new ethers.ContractFactory(artifact.abi, artifact.bytecode, owner);
+  const c = await f.deploy(ethers.parseEther(goalEth), seconds);
+  const rc = await c.deploymentTransaction().wait();
+  log[label] = rc.hash;
+  const addr = await c.getAddress();
+  log[label + "_address"] = addr;
+  console.log(`${label.padEnd(28)} ${addr}  (goal ${goalEth} ETH, ${seconds}s)  tx ${rc.hash}`);
+  return c;
+}
+
+async function main() {
+  console.log("Network :", (await provider.getNetwork()).name, (await provider.getNetwork()).chainId);
+  console.log("Owner   :", owner.address, eth(await provider.getBalance(owner.address)), "ETH");
+  console.log("Donor   :", donor.address, eth(await provider.getBalance(donor.address)), "ETH");
+
+  // 1. transfer between accounts: fund the donor
+  await send("fund_donor", owner.sendTransaction({ to: donor.address, value: ethers.parseEther("0.02") }));
+
+  // 2. two campaigns
+  const A = await deploy("deploy_A", "0.003", 150); // goal reachable
+  const B = await deploy("deploy_B", "1", 120); // goal unreachable
+  log.deadlines = { A: Number(await A.deadline()), B: Number(await B.deadline()) };
+
+  // 3. contributions
+  await send("A_donor_contribute", A.connect(donor).contribute({ value: ethers.parseEther("0.002") }));
+  await send("A_owner_contribute", A.connect(owner).contribute({ value: ethers.parseEther("0.002") }));
+  await send("B_donor_contribute", B.connect(donor).contribute({ value: ethers.parseEther("0.001") }));
+  console.log("A totalRaised:", eth(await A.totalRaised()), "goalReached:", await A.goalReached());
+  console.log("B totalRaised:", eth(await B.totalRaised()), "goalReached:", await B.goalReached());
+
+  // 4. negative test while the campaign is still active
+  try { await A.connect(owner).withdraw.staticCall(); } catch (e) { console.log("withdraw before deadline ->", e.reason || e.shortMessage); }
+
+  // 5. wait for deadline of A, then withdraw
+  const waitFor = async (c) => {
+    const left = Number(await c.timeLeft());
+    if (left > 0) { console.log(`waiting ${left + 15}s ...`); await sleep(left + 15); }
+  };
+  await waitFor(B);
+  try { await B.connect(owner).withdraw.staticCall(); } catch (e) { console.log("B withdraw (goal missed) ->", e.reason || e.shortMessage); }
+  await send("B_donor_refund", B.connect(donor).refund());
+  console.log("B donor contribution after refund:", eth(await B.contributions(donor.address)));
+
+  await waitFor(A);
+  const before = await provider.getBalance(owner.address);
+  await send("A_owner_withdraw", A.connect(owner).withdraw());
+  console.log("A contract balance after withdraw:", eth(await provider.getBalance(await A.getAddress())));
+  console.log("A withdrawn flag:", await A.withdrawn());
+  console.log(JSON.stringify(log, null, 2));
+}
+
+main().catch((e) => { console.error(e); process.exit(1); });
+```
+:::
 
 ## Output
 
 ![Remix IDE: Crowdfunding.sol compiled successfully with compiler 0.8.34](screenshots/exp4_01_compile.png)
-*`Crowdfunding.sol` compiles with no errors in Remix; the green tick on the Solidity Compiler icon confirms it.*
+*`Crowdfunding.sol` compiles with no errors in Remix.*
 
-### MetaMask connection and transactions on Ganache
+### MetaMask connected to Remix (flow shown on a local Ganache chain)
 
-![MetaMask connection request from app.remix.live](screenshots/exp4_mm_01_connect_remix.png)
-*Remix requests permission to connect selected MetaMask accounts. The permission screen lists access to addresses, balances and activity, and the ability to request transactions that require wallet approval.*
+::: shots
+![MetaMask connection request from Remix](screenshots/c_mm_connect.png)
+*Remix asks to connect to the MetaMask account.*
 
-![MetaMask wallet home on the Ganache network](screenshots/exp4_g_01_mm_wallet_home.png)
-*The "DApp Owner" account on the Ganache network, with its Activity tab showing the earlier contract interaction.*
+![MetaMask confirmation for a 1 ETH transfer between accounts](screenshots/c_mm_send.png)
+*Transfer between accounts: "DApp Owner" to "Donor".*
 
-![MetaMask send form for 1 ETH](screenshots/exp4_g_02_mm_send_form.png)
-*Transferring ETH between accounts: the recipient is the "Donor" account and the amount is 1 ETH, with 1004.4982 ETH available.*
+![MetaMask contract deployment confirmation requested by Remix](screenshots/c_mm_deploy.png)
+*"Deploy a contract", requested by Remix.*
 
-![MetaMask confirmation for a 1 ETH transfer between accounts](screenshots/exp4_g_03_mm_send_confirm.png)
-*The wallet shows the transfer from "DApp Owner" to "Donor" on the Ganache network with the network fee and the Confirm button.*
+![MetaMask confirmation for a 1.5 ETH contribution](screenshots/c_mm_contribute.png)
+*`contribute()` from the Donor with an amount of 1.5 ETH.*
+:::
 
-![MetaMask activity showing the 1 ETH transfer](screenshots/exp4_g_04_mm_activity.png)
-*After confirming, the Activity tab records "Sent ETH, To Donor, -1 ETH" and a "Transaction confirmed" notification.*
+### Deployment and lifecycle on the Sepolia testnet
 
-![Remix deploy form for Crowdfunding on Ganache](screenshots/exp4_g_05_remix_deploy_form.png)
-*Remix's Deploy & Run Transactions panel uses Browser Extension / MetaMask on "Ganache (5777)". The `Crowdfunding` constructor takes a goal of 1,000,000,000,000,000,000 wei (1 ETH) and a duration of 240 seconds.*
+Output of `sepolia_crowdfunding.js` (chain ID 11155111; each transaction hash opens on the explorer):
 
-![MetaMask contract deployment confirmation requested by Remix](screenshots/exp4_g_06_mm_deploy_confirm.png)
-*MetaMask displays "Deploy a contract" for a request from app.remix.live on Ganache, signed by "DApp Owner", with the network fee and the Confirm button.*
+```text
+Network : sepolia 11155111n
+Owner   : 0x51944Dd4b0862390b601B3d221978dC8B8f561a9 3.668990075471971624 ETH
+Donor   : 0x9bC6F8fc5D3956d50964Fafe5D5C20F544EFcE9c 0.0 ETH
+fund_donor                   0xc47584df7592e7c866840bb4c466ba8ee8aa2f1c74e357d27491d0ac3a55c893  block 12005570
+deploy_A                     0xd0E39cAeC616a472F33C38752A89B3B735A7D58B  (goal 0.003 ETH, 150s)  tx 0x2254f7808f8fd771275f66a4f813b2f2cb079d935efcddfd4553468b001e1b7f
+deploy_B                     0xbe5A4c2406ABca88A53271cbB063FaAD7e65b99C  (goal 1 ETH, 120s)  tx 0x79b2990aabb00777ff8d197cb9e8910da64dbe43e40ca4afd723b743f156ded8
+A_donor_contribute           0x553dc5fd81498aa21705c98ea47008622cdf163f0826889d27407e742294f39c  block 12005575
+A_owner_contribute           0x3391552fd54157030f699d7d81821cc0009e0b169a44ddcaebb628932546e4dc  block 12005577
+B_donor_contribute           0x6a6d9b91267562e24f57f7bbb61410b574ec214ecb267de11f86b47901179b50  block 12005578
+A totalRaised: 0.004 goalReached: true
+B totalRaised: 0.001 goalReached: false
+withdraw before deadline -> Campaign still active
+waiting 87s ...
+B withdraw (goal missed) -> Funding goal not reached
+B_donor_refund               0x16c5750efd5666997a88898af30b5580ac7c68085d08da5d5a0586e7f1f758fa  block 12005587
+B donor contribution after refund: 0.0
+A_owner_withdraw             0x5a549b9604f489a259fe517618c98ca68738b9b8a6ca90f29860484f9f20f744  block 12005588
+A contract balance after withdraw: 0.0
+A withdrawn flag: true
+```
 
-![MetaMask confirmation for a 1.5 ETH contribution](screenshots/exp4_g_07_mm_contribute_confirm.png)
-*After switching MetaMask to the "Donor" account and entering a Value of 1.5 ETH in Remix, `contribute()` shows a transaction request with the contract address and an **Amount of 1.5 ETH**.*
+![Campaign A contract page on the Sepolia explorer, Transactions tab](screenshots/exp4_s_01_campaignA_txs.png)
+*Campaign A (`0xd0E3...D58B`): the contract creation, the donor's and the owner's 0.002 ETH contributions, and the owner's `withdraw` call.*
 
-![Remix: contribute() mined through MetaMask](screenshots/exp4_g_08_remix_contribute_mined.png)
-*The Remix terminal logs `Crowdfunding.contribute()` from the Donor account with a value of 1,500,000,000,000,000,000 wei, mined successfully (block 16).*
+![Campaign A internal transactions](screenshots/exp4_s_02_campaignA_internal.png)
+*Internal transactions of Campaign A: the contract paid 0.004 ETH (the whole pot) to the owner when `withdraw()` ran after the deadline.*
 
-![Remix: goalReached and totalRaised after the contribution](screenshots/exp4_g_09_remix_state.png)
-*Reading the contract from Remix: `totalRaised()` returns 1,500,000,000,000,000,000 wei and `goalReached()` returns true; the contract's balance shows 1.5 ETH.*
+![Campaign B internal transactions](screenshots/exp4_s_03_campaignB_internal.png)
+*Campaign B (goal not reached): the contract paid 0.001 ETH back to the donor's account `0x9b...cE9c` through `refund()`.*
 
-![MetaMask confirmation for the owner's withdraw](screenshots/exp4_g_10_mm_withdraw_confirm.png)
-*Once the 240 second deadline has passed (`timeLeft()` returns 0), MetaMask shows the owner's `withdraw()` request from the "DApp Owner" account to the Crowdfunding contract.*
-
-![Remix: withdraw mined and owner balance increased](screenshots/exp4_g_11_remix_withdraw_mined.png)
-*`withdraw()` is mined in block 18 with value 0; the owner account in Remix rises from 1003.496 ETH to 1004.996 ETH, which is the 1.5 ETH raised, and the contract balance is empty.*
-
-### Crowdfunding lifecycle tests on Remix VM
-
-![Remix terminal: the five Remix VM accounts and Scenario A pledges](screenshots/exp4_02_scenarioA_pledges.png)
-*The five Remix VM accounts, then Campaign A (goal 3 ETH, 60 s) deployed. Alice, Bob and Carol pledge 1.0, 1.0 and 1.5 ETH, so 3.5 ETH is raised against the 3 ETH goal while the campaign is still open.*
-
-![Remix terminal: Campaign A withdrawal after the deadline, and Campaign B pledge and rejected withdrawal](screenshots/exp4_03_scenarioA_withdraw.png)
-*After the deadline has passed in real time (`timeLeft() = 0`), the owner's `withdraw()` succeeds and the owner's balance rises by 3.5 ETH, leaving the contract empty. A second withdraw reverts with "Already withdrawn". Campaign B (goal 10 ETH) then receives only Dave's 2 ETH, and the owner's withdraw is rejected with "Funding goal not reached".*
-
-![Remix terminal: Campaign B refund and double-refund test](screenshots/exp4_04_scenarioB_refund.png)
-*Dave's `refund()` returns his full 2 ETH and empties the contract, and a repeat refund reverts with "No contribution to refund".*
+![Deploy transaction of Campaign A on the explorer](screenshots/exp4_s_04_deploy_tx.png)
+*Transaction details of the Campaign A deployment: status Success, block 12005572, from the owner account.*
 
 ## Conclusion
 
-This experiment developed and deployed a Crowdfunding smart contract, a self-contained blockchain-powered application, in Remix IDE on the Remix VM. Two full campaign lifecycles were exercised end to end: a goal-reached campaign where three contributors' combined pledges exceeded the target and the owner withdrew the raised funds exactly once, and a goal-missed campaign where the sole contributor reclaimed their full pledge via `refund()` after the deadline passed. Every guard condition in the contract (`onlyOwner`, the deadline check, the goal-reached check, and the double-withdraw and double-refund protections) was confirmed by a negative test that reverted with the expected reason string, demonstrating the fund-safety guarantees of the contract. The MetaMask screenshots show the same contract driven through a real wallet on a Ganache chain: deployment, a 1.5 ETH pledge from a donor account that reached the goal, and the owner's withdrawal after the deadline, each approved on a MetaMask confirmation screen.
+A Crowdfunding smart contract was written, compiled in Remix and deployed to the public **Sepolia testnet**, and its full lifecycle was exercised on the live network. Campaign A reached its goal (0.004 ETH raised against 0.003 ETH) and the owner's `withdraw()` moved the whole balance out once the deadline passed; Campaign B missed its goal and the donor recovered the full 0.001 ETH through `refund()`. The negative tests reverted with the expected reasons ("Campaign still active" before the deadline, "Funding goal not reached" for a withdrawal when the goal was missed), and the explorer's internal transactions confirm that the funds moved as the contract states. The MetaMask screenshots show the wallet approving the connection from Remix, a transfer between accounts, a contract deployment and a payable contribution, which is the flow used to embed MetaMask in a Remix project.

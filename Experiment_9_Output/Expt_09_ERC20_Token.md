@@ -4,7 +4,16 @@
 
 ## Aim
 
-To create an ERC-20 token in Solidity with the Mintable, Burnable and Pausable extensions, deploy it, and exercise its standard functions and events (`transfer`, `approve`, `transferFrom`, `Transfer`, `Approval`).
+To create an ERC-20 token in Remix IDE by completing the LearnEth *Solidity ERC20 Token Course*, and to deploy an ERC-20 token with the Mintable, Burnable and Pausable extensions to the **Sepolia public testnet**, then exercise its standard functions and events.
+
+## Tasks Performed
+
+1. Opened the **LearnEth** plugin in Remix and the *Solidity ERC20 Token Course* (6 chapters: Introduction, Interface, Token Creation, Interaction, Testnet Deployment, Extensions).
+2. Completed all 6 chapters. The two chapters with a graded assignment passed the Check Answer test: chapter 1 (quiz: answers 2, 3, 2) and chapter 3 (`EduCoin`, symbol `EDC`, 1000 tokens minted). Chapters 2, 4, 5 and 6 are reading and hands-on chapters (the `IERC20` interface, interaction, MetaMask deployment, extensions), carried out below on the experiment's own token.
+3. Set up a MetaMask wallet and funded the owner account with Sepolia test ETH from a faucet (3.67 ETH).
+4. Compiled the course token extended with Mintable, Burnable and Pausable features as `VESToken` (OpenZeppelin 5.x).
+5. **Deployed `VESToken` to Sepolia** with an initial supply of 1000 VEST, and ran `transfer`, `approve`/`allowance`/`transferFrom`, `mint`, `burn`, `pause` and `unpause` on the live network.
+6. Verified the token, its holders and the transactions on the Sepolia block explorer.
 
 ## Theory
 
@@ -26,35 +35,172 @@ A **token** is a smart contract that keeps a ledger of balances (`mapping(addres
 - **Burnable** — `burn(amount)` lets a holder destroy their own tokens, permanently reducing total supply.
 - **Pausable** — the owner can `pause()` to halt every transfer (an emergency stop) and `unpause()` to resume.
 
-**Tools used:** Remix IDE (web, v2.6.8), Solidity compiler 0.8.34 (the contract declares `pragma solidity ^0.8.24`), OpenZeppelin Contracts 5.x (imported by Remix straight from npm through the `@openzeppelin/contracts/...` import paths), the in-browser *Remix VM (Osaka)* test blockchain, and a JavaScript script run from Remix's terminal with the built-in ethers.js v6 runner. The token was deployed to the Remix VM, not to a public testnet.
+**Tools used:** Remix IDE 2.6.8 with the LearnEth plugin, Solidity 0.8.x, OpenZeppelin Contracts 5.6 (the course itself uses 4.4.0), MetaMask 13.53, ethers.js v6, and the Sepolia explorer at eth-sepolia.blockscout.com (Etherscan blocks automated browsers; the pages show the same data).
 
-**Wallet integration:** the MetaMask screenshots use Remix's *Browser Extension* environment (Injected Provider) with MetaMask 13.53 connected to a local Hardhat node (chain ID 31337, which Remix labels "GoChain Testnet"), with the compiler EVM version set to Cancun because that node does not support Remix's default Osaka target. The chain is local, not a public testnet, so no faucet funds were used.
+**Note on signing:** the Sepolia transactions were signed with the funded account's key from an ethers.js script (below), so the key never appears in a screenshot; a second, freshly generated account was funded with a little test ETH to act as the token holder and spender. The MetaMask + Remix deployment flow (confirmation screens) was captured earlier on a local chain. Every transaction hash in the log is public and can be opened on the explorer.
+
+## Program
+
+Chapter 3 assignment, `EduCoin.sol`, and the final `VESToken.sol` (ERC-20 with Mintable, Burnable and Pausable extensions):
+
+::: code2
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.3;
+
+import "@openzeppelin/contracts@4.4.0/token/ERC20/ERC20.sol";
+
+contract EduCoin is ERC20 {
+    constructor() ERC20("EduCoin", "EDC") {
+        _mint(msg.sender, 1000 * 10 ** decimals());
+    }
+}
+```
+:::
+
+::: code2
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.24;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+/// @title VESToken - an ERC-20 token with Mintable, Burnable and Pausable extensions
+contract VESToken is ERC20, ERC20Burnable, ERC20Pausable, Ownable {
+    constructor(uint256 initialSupply)
+        ERC20("VES Token", "VEST")
+        Ownable(msg.sender)
+    {
+        _mint(msg.sender, initialSupply * 10 ** decimals());
+    }
+
+    // Mintable: only the owner can create new tokens
+    function mint(address to, uint256 amount) public onlyOwner {
+        _mint(to, amount);
+    }
+
+    // Pausable: only the owner can halt / resume all transfers
+    function pause() public onlyOwner { _pause(); }
+    function unpause() public onlyOwner { _unpause(); }
+
+    // Required override: ERC20 and ERC20Pausable both hook into _update
+    function _update(address from, address to, uint256 value)
+        internal
+        override(ERC20, ERC20Pausable)
+    {
+        super._update(from, to, value);
+    }
+}
+```
+:::
+
+`scripts/sepolia_token.js` (deploys `VESToken` to Sepolia and exercises it):
+
+::: code2
+```javascript
+// Run: node --env-file=../.env --env-file=<donor.env> scripts/sepolia_token.js
+// SEPOLIA_PRIVATE_KEY = funded owner account, DONOR_PRIVATE_KEY = second account (holder / spender).
+const { ethers } = require("ethers");
+const artifact = require("../artifacts/contracts/VESToken.sol/VESToken.json");
+
+const provider = new ethers.JsonRpcProvider("https://ethereum-sepolia-rpc.publicnode.com");
+const owner = new ethers.Wallet(process.env.SEPOLIA_PRIVATE_KEY, provider);
+const donor = new ethers.Wallet(process.env.DONOR_PRIVATE_KEY, provider);
+const tok = (v) => ethers.formatUnits(v, 18);
+const log = {};
+
+async function send(label, txPromise) {
+  const rc = await (await txPromise).wait();
+  log[label] = rc.hash;
+  console.log(`${label.padEnd(22)} ${rc.hash}  block ${rc.blockNumber}`);
+}
+async function show(t, label) {
+  console.log(`${label}: owner ${tok(await t.balanceOf(owner.address))} | donor ${tok(await t.balanceOf(donor.address))} | supply ${tok(await t.totalSupply())} VEST`);
+}
+
+async function main() {
+  console.log("Network:", (await provider.getNetwork()).name, "Owner:", owner.address, "Donor:", donor.address);
+  const f = new ethers.ContractFactory(artifact.abi, artifact.bytecode, owner);
+  const t = await f.deploy(1000);
+  const rc = await t.deploymentTransaction().wait();
+  log.deploy = rc.hash; log.address = await t.getAddress();
+  console.log("deploy                 ", log.address, " tx", rc.hash);
+  console.log("name/symbol/decimals   ", await t.name(), await t.symbol(), await t.decimals());
+  await show(t, "after deploy");
+
+  await send("transfer_250", t.transfer(donor.address, ethers.parseUnits("250", 18)));
+  await show(t, "after transfer");
+  await send("approve_100", t.approve(donor.address, ethers.parseUnits("100", 18)));
+  console.log("allowance(owner,donor) ", tok(await t.allowance(owner.address, donor.address)));
+  await send("transferFrom_40", t.connect(donor).transferFrom(owner.address, donor.address, ethers.parseUnits("40", 18)));
+  await send("mint_500", t.mint(owner.address, ethers.parseUnits("500", 18)));
+  await send("burn_100", t.burn(ethers.parseUnits("100", 18)));
+  await show(t, "after mint+burn");
+  await send("pause", t.pause());
+  try { await t.connect(donor).transfer.staticCall(owner.address, 1n); } catch (e) { console.log("transfer while paused ->", e.revert ? e.revert.name : e.shortMessage); }
+  await send("unpause", t.unpause());
+  await send("transfer_after", t.connect(donor).transfer(owner.address, ethers.parseUnits("10", 18)));
+  await show(t, "final");
+  console.log(JSON.stringify(log, null, 2));
+}
+main().catch((e) => { console.error(e); process.exit(1); });
+```
+:::
 
 ## Output
 
-![Remix IDE: VESToken.sol with OpenZeppelin imports compiled successfully](screenshots/exp9_01_compile.png)
-*`VESToken.sol` and its OpenZeppelin imports (`ERC20`, `ERC20Burnable`, `ERC20Pausable`, `Ownable`) compile with no errors in Remix; the green tick on the Solidity Compiler icon confirms it.*
+### LearnEth: Solidity ERC20 Token Course
 
-![Remix terminal: token deployment, metadata, and the first transfer](screenshots/exp9_02_deploy_and_transfer.png)
-*`VESToken` is deployed with an initial supply of 1000 VEST, all credited to the deployer, and its name, symbol, decimals and supply are read back. Owner then transfers 100 VEST to Alice, and the decoded `Transfer` event and both balances confirm it.*
+::: shots
+![LearnEth syllabus of the Solidity ERC20 Token Course with 6 chapters](screenshots/exp9_lc_00_syllabus.png)
+*The six chapters of the course.*
 
-![Remix terminal: approve, transferFrom, the allowance failure, and minting](screenshots/exp9_03_allowance_mint.png)
-*Alice approves Bob for 40 VEST (an `Approval` event), Bob spends 25 through `transferFrom` and the allowance falls to 15, and a further 20 VEST attempt is rejected with `ERC20InsufficientAllowance`. The owner then mints 500 VEST to Bob, raising total supply to 1500, while a non-owner's mint is rejected with `OwnableUnauthorizedAccount`.*
+![Chapter 1 quiz passed with Well done! No errors.](screenshots/exp9_lc_01_quiz.png)
+*Chapter 1: quiz answers 2, 3, 2 accepted ("Well done! No errors.").*
+:::
 
-![Remix terminal: burn, pause, unpause and final balances](screenshots/exp9_04_burn_pause_final.png)
-*Bob's `burn(100)` lowers total supply to 1400. While the contract is paused, Alice's transfer reverts with `EnforcedPause()`, and after `unpause()` transfers work again. The final balances (900 + 70 + 430) sum to the total supply of 1400.*
+![Chapter 3: EduCoin assignment passed](screenshots/exp9_lc_03_educoin.png)
+*Chapter 3, Token Creation: the contract renamed `EduCoin`, symbol `EDC`, 1000 tokens minted, accepted by Check Answer.*
 
-### Deployment and transfer through MetaMask
+![Chapter 6: the extensions contract](screenshots/exp9_lc_06_extensions.png)
+*Chapter 6, Extensions: the final contract, `ERC20` + `ERC20Burnable` + `Pausable` + `Ownable`, with `mint`, `pause` and `unpause`; its assignments (mint, burn, pause) are carried out on Sepolia below.*
 
-![MetaMask confirmation for deploying VESToken from Remix](screenshots/exp9_mm_01_deploy_confirm.png)
-*Remix requests deployment of `VESToken` with an initial supply of 1000. MetaMask shows "Deploy a contract" from app.remix.live on Localhost 8545, with the network fee and the Confirm button.*
+### Deployment on the Sepolia testnet
 
-![MetaMask transaction request for a VESToken transfer](screenshots/exp9_mm_02_transfer_confirm.png)
-*Calling `transfer(to, 100e18)` from Remix produces a MetaMask confirmation to send 100 tokens (shown as "Unknown" because MetaMask does not know this local token) from Imported Account 1 to Imported Account 2, interacting with the `VESToken` contract.*
+Output of `sepolia_token.js` (chain ID 11155111):
 
-![Remix: VESToken deployed, transfer mined, and the recipient's balance](screenshots/exp9_mm_03_remix_deployed_and_transfer.png)
-*The Remix terminal logs the constructor (block 14) and the `transfer` (block 15), both successful and sent from the MetaMask account. Calling `balanceOf` on the recipient returns 100000000000000000000, i.e. 100 VEST at 18 decimals.*
+```text
+Network: sepolia Owner: 0x51944Dd4b0862390b601B3d221978dC8B8f561a9 Donor: 0x9bC6F8fc5D3956d50964Fafe5D5C20F544EFcE9c
+deploy                  0x66A8aE5e6d0284433Eb4b30b0Aa87254d64976DC  tx 0x3bb88e94323c42bf140d5dcce8ea22726082d536cc1064f27e6c5601c5414ea0
+name/symbol/decimals    VES Token VEST 18n
+after deploy: owner 1000.0 | donor 0.0 | supply 1000.0 VEST
+transfer_250           0x86d5632b614f5989540af37ee15bacffbf2152b95ccb7e471f1fad3fac6ba4d8  block 12005591
+after transfer: owner 750.0 | donor 250.0 | supply 1000.0 VEST
+approve_100            0x7ff0c33b01cc498b2b46dca33e304555b02feff3051b814cb8686d3f18219e86  block 12005592
+allowance(owner,donor)  100.0
+transferFrom_40        0x1a6c734d45558b4be622cd87f44e6d0ff68522597eda011790c0b91aae484d34  block 12005594
+mint_500               0x5ea41dbf31f7eada1cd419b42e5fb9f18154d9a3780e87c2bd5d651eb9dbb41b  block 12005595
+burn_100               0x6bd5ce16e71aa101deff4ac589805cc678c6b39ef021ec67b479515d813c9b08  block 12005596
+after mint+burn: owner 1110.0 | donor 290.0 | supply 1400.0 VEST
+pause                  0x5cffe4802f7e077eaebb5ce65041ddf663df257c273149de964696c15b73b649  block 12005598
+transfer while paused -> EnforcedPause
+unpause                0xb40205d8af8d48edf3a3c2e9439586f49090d89b11a6732aba8444c04b5181b8  block 12005600
+transfer_after         0xd09a7155b095b3dac806a78a45293085096e358e6de7062261a57b3c7a63ea14  block 12005601
+final: owner 1120.0 | donor 280.0 | supply 1400.0 VEST
+```
+
+![VES Token transactions on the Sepolia explorer](screenshots/exp9_s_01_token_txs.png)
+*The token contract on the explorer: contract creation, `transfer`, `approve`, `transferFrom`, `mint`, `burn`, `pause`, `unpause` and the final `transfer`, in order, with status and block numbers.*
+
+![VES Token holders](screenshots/exp9_s_02_holders.png)
+*Token holders: the owner holds 1,120 VEST (80%) and the second account 280 VEST (20%), which adds up to the total supply of 1,400 VEST.*
+
+![Pause transaction](screenshots/exp9_s_03_pause_tx.png)
+*The `pause()` transaction: status Success, called by the owner on `VES Token`.*
 
 ## Conclusion
 
-This experiment created an ERC-20 token, `VESToken (VEST)`, and deployed it in Remix IDE on the Remix VM. All the standard behaviours were exercised: balances and metadata, direct transfers with `Transfer` events, the approve-then-`transferFrom` allowance flow with `Approval` events, and its failure when the allowance is exceeded. The three extensions each behaved as expected: minting grew the supply from 1000 to 1500 (owner only), burning shrank it to 1400, and pausing froze all transfers until the owner resumed them. Total supply stayed consistent with the sum of balances throughout (1400 = 900 + 70 + 430).
+An ERC-20 token was created and deployed to the public **Sepolia testnet** (`VES Token`, `VEST`, 18 decimals), after completing the six chapters of the LearnEth ERC20 course. On the live network, `transfer` and `transferFrom` moved balances, `approve` set the allowance, the owner minted 500 and burned 100 tokens (total supply 1000 → 1400), and a transfer attempted while the token was paused was rejected with `EnforcedPause` until `unpause()`. The explorer's holders list (1,120 + 280 = 1,400 VEST) agrees with the script's final balances, so total supply stayed consistent with the sum of balances throughout.
