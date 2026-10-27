@@ -10,9 +10,9 @@ To create an ERC-20 token in Remix IDE by completing the LearnEth *Solidity ERC2
 
 1. Opened the **LearnEth** plugin in Remix and the *Solidity ERC20 Token Course* (6 chapters: Introduction, Interface, Token Creation, Interaction, Testnet Deployment, Extensions).
 2. Completed all 6 chapters. The two chapters with a graded assignment passed the Check Answer test: chapter 1 (quiz: answers 2, 3, 2) and chapter 3 (`EduCoin`, symbol `EDC`, 1000 tokens minted). Chapters 2, 4, 5 and 6 are reading and hands-on chapters (the `IERC20` interface, interaction, MetaMask deployment, extensions), carried out below on the experiment's own token.
-3. Set up a MetaMask wallet and funded the owner account with Sepolia test ETH from a faucet (3.67 ETH).
+3. Set up a MetaMask wallet with the owner account and funded it with Sepolia test ETH from a faucet (3.67 ETH), then connected it to Remix (*Browser Extension*, *Sepolia Testnet - MetaMask*).
 4. Compiled the course token extended with Mintable, Burnable and Pausable features as `VESToken` (OpenZeppelin 5.x).
-5. **Deployed `VESToken` to Sepolia** with an initial supply of 1000 VEST, and ran `transfer`, `approve`/`allowance`/`transferFrom`, `mint`, `burn`, `pause` and `unpause` on the live network.
+5. **Deployed `VESToken` to Sepolia from Remix through MetaMask** (initial supply 1000 VEST) and sent 100 VEST to a second account from Remix. A second instance was deployed with a script to run `transfer`, `approve`/`allowance`/`transferFrom`, `mint`, `burn`, `pause` and `unpause` on the live network.
 6. Verified the token, its holders and the transactions on the Sepolia block explorer.
 
 ## Theory
@@ -35,9 +35,9 @@ A **token** is a smart contract that keeps a ledger of balances (`mapping(addres
 - **Burnable** — `burn(amount)` lets a holder destroy their own tokens, permanently reducing total supply.
 - **Pausable** — the owner can `pause()` to halt every transfer (an emergency stop) and `unpause()` to resume.
 
-**Tools used:** Remix IDE 2.6.8 with the LearnEth plugin, Solidity 0.8.x, OpenZeppelin Contracts 5.6 (the course itself uses 4.4.0), MetaMask 13.53, ethers.js v6, and the Sepolia explorer at eth-sepolia.blockscout.com (Etherscan blocks automated browsers; the pages show the same data).
+**Tools used:** Remix IDE 2.6.8 with the LearnEth plugin, Solidity 0.8.x, OpenZeppelin Contracts 5.6 (the course itself uses 4.4.0), MetaMask 13.53, ethers.js v6, and the Sepolia block explorer (Blockscout).
 
-**Note on signing:** the Sepolia transactions were signed with the funded account's key from an ethers.js script (below), so the key never appears in a screenshot; a second, freshly generated account was funded with a little test ETH to act as the token holder and spender. The MetaMask + Remix deployment flow (confirmation screens) was captured earlier on a local chain. Every transaction hash in the log is public and can be opened on the explorer.
+The deployment and the first transfer were signed in MetaMask from Remix; the full function-by-function test (mint, burn, pause, allowance) was run on a second instance with an ethers.js script (below), which also used a second account as the token holder.
 
 ## Program
 
@@ -168,7 +168,32 @@ main().catch((e) => { console.error(e); process.exit(1); });
 ![Chapter 6: the extensions contract](screenshots/exp9_lc_06_extensions.png)
 *Chapter 6, Extensions: the final contract, `ERC20` + `ERC20Burnable` + `Pausable` + `Ownable`, with `mint`, `pause` and `unpause`; its assignments (mint, burn, pause) are carried out on Sepolia below.*
 
-### Deployment on the Sepolia testnet
+### Deployment from Remix through MetaMask (Sepolia)
+
+::: shots
+![MetaMask confirmation for deploying VESToken from Remix](screenshots/r_mm_deploy.png)
+*MetaMask's "Deploy a contract" request on the Sepolia network, from app.remix.live (initial supply 1000).*
+
+![MetaMask confirmation of a 100 VEST transfer](screenshots/r_mm_transfer.png)
+*Remix `transfer(to, 100e18)`: MetaMask shows 100 tokens leaving Imported Account 1 for the second account (the token is "Unknown" to MetaMask).*
+:::
+
+![Remix: VESToken deployed on Sepolia through MetaMask](screenshots/r_remix_deployed.png)
+*Remix with *Browser Extension / Sepolia Testnet - MetaMask*: `VESToken` (0x91D6...A323) deployed, the constructor mined in block 12005999.*
+
+![Remix: transfer mined](screenshots/r_remix_transfer.png)
+*`VESToken.transfer` of 100 VEST mined in block 12006007, sent from the MetaMask account.*
+
+![Token deployment on the Sepolia explorer](screenshots/r_s_deploy_tx.png)
+*The explorer shows the contract creation and the mint of 1,000 VEST to the deployer.*
+
+![Token transfer on the Sepolia explorer](screenshots/r_s_transfer_tx.png)
+*The transfer of 100 VEST: status Success, block 12006007.*
+
+![Token holders after the transfer](screenshots/r_s_holders.png)
+*Holders: the deployer holds 900 VEST (90%) and the second account 100 VEST (10%).*
+
+### Full function test on the Sepolia testnet (script)
 
 Output of `sepolia_token.js` (chain ID 11155111):
 
@@ -193,7 +218,7 @@ final: owner 1120.0 | donor 280.0 | supply 1400.0 VEST
 ```
 
 ![VES Token transactions on the Sepolia explorer](screenshots/exp9_s_01_token_txs.png)
-*The token contract on the explorer: contract creation, `transfer`, `approve`, `transferFrom`, `mint`, `burn`, `pause`, `unpause` and the final `transfer`, in order, with status and block numbers.*
+*The scripted token instance on the explorer: contract creation, `transfer`, `approve`, `transferFrom`, `mint`, `burn`, `pause`, `unpause` and the final `transfer`, in order, with status and block numbers.*
 
 ![VES Token holders](screenshots/exp9_s_02_holders.png)
 *Token holders: the owner holds 1,120 VEST (80%) and the second account 280 VEST (20%), which adds up to the total supply of 1,400 VEST.*

@@ -9,9 +9,9 @@ To develop a blockchain-powered application using the Solidity programming langu
 ## Tasks Performed
 
 1. **Set up MetaMask:** installed the MetaMask extension, created and imported accounts, and funded the owner account with Sepolia test ETH (3.67 ETH from a faucet).
-2. **Connected the network to Remix:** in Remix's *Deploy & Run Transactions* panel the environment was set to *Browser Extension / MetaMask*, so Remix sends every transaction to the wallet for approval (shown on a local Ganache chain, which uses the identical flow).
+2. **Connected the Sepolia testnet to Remix:** in *Deploy & Run Transactions* the environment was set to *Browser Extension* with *Sepolia Testnet - MetaMask*, and the connection was approved in MetaMask.
 3. **Created the mini-project contract:** `Crowdfunding.sol` (goal, deadline, `contribute`, `withdraw`, `refund`) and compiled it with Solidity 0.8.34.
-4. **Deployed to Sepolia:** two campaigns, A (goal 0.003 ETH, 150 s) and B (goal 1 ETH, 120 s), through the owner account.
+4. **Deployed to Sepolia:** from Remix through MetaMask (Campaign C, goal 0.001 ETH, 240 s), and two further campaigns, A (goal 0.003 ETH, 150 s) and B (goal 1 ETH, 120 s), through the owner account.
 5. **Interacted with the contracts on Sepolia:** transferred 0.02 ETH between accounts, contributed from a second "donor" account, waited for the deadlines, then withdrew the funds of A (goal reached) and refunded the donor of B (goal missed). Negative tests were run for withdrawing too early and withdrawing with the goal missed.
 6. **Checked the transactions on a block explorer:** the contract pages, internal transactions and deploy transaction on the Sepolia explorer (Blockscout).
 
@@ -21,9 +21,9 @@ To develop a blockchain-powered application using the Solidity programming langu
 
 The contract models the funding lifecycle of a crowdfunding dApp. The **constructor** records the `goal` (wei) and `deadline = block.timestamp + duration`. **`contribute()`** is `payable` and adds `msg.value` to the caller's entry in `contributions` and to `totalRaised`. **`withdraw()`** is `onlyOwner` and only works after the deadline when `totalRaised >= goal`; it sends the whole balance to the owner once. **`refund()`** works after the deadline only when the goal was missed; the contributor's balance is zeroed before the ETH is sent (checks-effects-interactions).
 
-**Tools used:** Remix IDE 2.6.8, Solidity 0.8.34, MetaMask 13.53, ethers.js v6 and Hardhat 2.x (for compiling the artifact), and the Sepolia explorer at eth-sepolia.blockscout.com (Etherscan blocks automated browsers, and the explorer pages carry the same data).
+**Tools used:** Remix IDE 2.6.8, Solidity 0.8.34, MetaMask 13.53, ethers.js v6 and Hardhat 2.x (for compiling the artifact), and the Sepolia block explorer (Blockscout).
 
-**Note on how the Sepolia transactions were signed:** the MetaMask + Remix flow (connection, send, deploy and contribute confirmations) was captured live on a local Ganache chain, where it works exactly the same. The Sepolia transactions themselves were signed with the funded account's key from an ethers.js script (below), so that the two campaign deadlines could be run in parallel and the key never appears in any screenshot. All Sepolia transaction hashes in the log are public and can be opened on the explorer.
+Campaign C was deployed from Remix through MetaMask. Campaigns A and B, whose contributions, withdrawal and refund are timed against their deadlines, were run with an ethers.js script (below).
 
 ## Program
 
@@ -199,23 +199,26 @@ main().catch((e) => { console.error(e); process.exit(1); });
 ![Remix IDE: Crowdfunding.sol compiled successfully with compiler 0.8.34](screenshots/exp4_01_compile.png)
 *`Crowdfunding.sol` compiles with no errors in Remix.*
 
-### MetaMask connected to Remix (flow shown on a local Ganache chain)
+### MetaMask connected to Remix on Sepolia
 
 ::: shots
-![MetaMask connection request from Remix](screenshots/c_mm_connect.png)
-*Remix asks to connect to the MetaMask account.*
+![MetaMask connection request from Remix](screenshots/r_mm_connect.png)
+*MetaMask asks to connect the funded account to Remix.*
 
-![MetaMask confirmation for a 1 ETH transfer between accounts](screenshots/c_mm_send.png)
-*Transfer between accounts: "DApp Owner" to "Donor".*
+![Remix deploy form on Sepolia](screenshots/r_remix_form.png)
+*Remix: Browser Extension, Sepolia (11155111), the account with 3.65 ETH, goal 0.001 ETH and 240 s.*
 
-![MetaMask contract deployment confirmation requested by Remix](screenshots/c_mm_deploy.png)
-*"Deploy a contract", requested by Remix.*
-
-![MetaMask confirmation for a 1.5 ETH contribution](screenshots/c_mm_contribute.png)
-*`contribute()` from the Donor with an amount of 1.5 ETH.*
+![MetaMask confirmation for deploying the Crowdfunding contract](screenshots/r_mm_deploy.png)
+*MetaMask's "Deploy a contract" request on the Sepolia network, from app.remix.live.*
 :::
 
-### Deployment and lifecycle on the Sepolia testnet
+![Remix after the MetaMask deployment](screenshots/r_remix_deployed.png)
+*After confirming, Remix lists `Crowdfunding` (0x028C...A7EA) on Sepolia and the terminal logs the constructor transaction, mined in block 12005971.*
+
+![Deploy transaction on the Sepolia explorer](screenshots/r_s_deploy_tx.png)
+*The same transaction on the explorer: Contract Creation, status Success, from the owner account.*
+
+### Full lifecycle on the Sepolia testnet (Campaigns A and B)
 
 Output of `sepolia_crowdfunding.js` (chain ID 11155111; each transaction hash opens on the explorer):
 
@@ -250,9 +253,6 @@ A withdrawn flag: true
 ![Campaign B internal transactions](screenshots/exp4_s_03_campaignB_internal.png)
 *Campaign B (goal not reached): the contract paid 0.001 ETH back to the donor's account `0x9b...cE9c` through `refund()`.*
 
-![Deploy transaction of Campaign A on the explorer](screenshots/exp4_s_04_deploy_tx.png)
-*Transaction details of the Campaign A deployment: status Success, block 12005572, from the owner account.*
-
 ## Conclusion
 
-A Crowdfunding smart contract was written, compiled in Remix and deployed to the public **Sepolia testnet**, and its full lifecycle was exercised on the live network. Campaign A reached its goal (0.004 ETH raised against 0.003 ETH) and the owner's `withdraw()` moved the whole balance out once the deadline passed; Campaign B missed its goal and the donor recovered the full 0.001 ETH through `refund()`. The negative tests reverted with the expected reasons ("Campaign still active" before the deadline, "Funding goal not reached" for a withdrawal when the goal was missed), and the explorer's internal transactions confirm that the funds moved as the contract states. The MetaMask screenshots show the wallet approving the connection from Remix, a transfer between accounts, a contract deployment and a payable contribution, which is the flow used to embed MetaMask in a Remix project.
+A Crowdfunding smart contract was written, compiled in Remix and deployed to the public **Sepolia testnet**, and its full lifecycle was exercised on the live network. Campaign A reached its goal (0.004 ETH raised against 0.003 ETH) and the owner's `withdraw()` moved the whole balance out once the deadline passed; Campaign B missed its goal and the donor recovered the full 0.001 ETH through `refund()`. The negative tests reverted with the expected reasons ("Campaign still active" before the deadline, "Funding goal not reached" for a withdrawal when the goal was missed), and the explorer's internal transactions confirm that the funds moved as the contract states. MetaMask was embedded in the Remix workflow: the wallet approved the connection and signed the Sepolia deployment requested from Remix.
